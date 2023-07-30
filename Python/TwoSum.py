@@ -1,4 +1,4 @@
-import os
+import unittest
 
 class Utility:
     """Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
@@ -26,15 +26,29 @@ class Utility:
         # Initialize memory used to remember the elements that we've seen in previous iterations
         memory = {}
         # Iterate through each number in inputNumbers
-        for idx in range(len(numbers)):
+        for idx in range(len(inputNumbers)):
             # Check if given number is a compliment of another number we've seen in previous iterations
             # Here, compliment of a number is the difference between sumToTarget and the number
-            if numbers[idx] in memory.keys():
+            if inputNumbers[idx] in memory.keys():
                 # If so, return indices of the current iteration and the iteration that the compliment was seen.
-                return [idx, memory[numbers[idx]]]
+                return [idx, memory[inputNumbers[idx]]]
             else:
                 # If not, remember the compliment of current number and index it was seen at
-                memory[sumToTarget - numbers[idx]] = idx
+                memory[sumToTarget - inputNumbers[idx]] = idx
         else:
             # If at the end of all iterations, we didn't find a complementing pair, raise Error
             raise Exception("InvalidInputError")
+
+
+class UtilityTest(unittest.TestCase):
+    def test_findTwoElementsFrom_happyCase(self):
+        self.assertEqual(set([0,1]), set(Utility.findTwoElementsFrom([2,7,11,15], 9)))
+        self.assertEqual(set([1,2]), set(Utility.findTwoElementsFrom([3,2,4], 6)))
+        self.assertEqual(set([0,1]), set(Utility.findTwoElementsFrom([3,3], 6)))
+
+    def test_findTwoElementsFrom_emptyInput(self):
+        self.assertRaises(Exception, Utility.findTwoElementsFrom, [], 9)
+        self.assertRaises(Exception, Utility.findTwoElementsFrom, None, 9)
+
+if __name__ == "__main__":
+    unittest.main()
