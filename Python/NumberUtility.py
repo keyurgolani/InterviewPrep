@@ -113,6 +113,65 @@ class NumberUtility:
         return result
 
 
+    """Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+    https://leetcode.com/problems/median-of-two-sorted-arrays"""
+    @staticmethod
+    def medianOf(sortedArrayOne, sortedArrayTwo):
+        """Brute Force:
+        Merge both the arrays. Find median by finding the middle element of array.
+        If the merged array has even elements, find the two middle elements and take their average.
+        Runtime: O(m+n) Space: O(m+n)
+        Optimized:
+        Find the total size of merged array without actually merging the arrays (Just a sum of lengths of both the arrays).
+        Figure out what element of the array will give us median of final array. Start merging two arrays from the beginning in merge sort method. 
+        To do this, evaluate the smallest element on each array, pop the smallest of both and count it merged to the merged array (Again, do not actually merge the array).
+        Upon reaching the element of array that will give us median, use those elements to find median and return.
+        More Optimized:
+        A median is the number that divides the resulting combined array into two equal halves.
+        Hence, we can use binary search to split two parts of that array and find the index of such an element 
+        that will give us half of the elements from resulting array less than the element and other half more than the element.
+        
+        Note: This is a leetcode hard problem. Not easy to explain in comments like this. A relatively much more detailed and easier to understand explaination is given here.
+        https://leetcode.com/problems/median-of-two-sorted-arrays/editorial/"""
+        # If no array has any value, return None.
+        if not sortedArrayOne and not sortedArrayTwo:
+            return None
+        # We want to binary search on smaller array. So before assuming that first array will be smaller in length, if the counter is true, change that.
+        if len(sortedArrayOne) > len(sortedArrayTwo):
+            return NumberUtility.medianOf(sortedArrayTwo, sortedArrayOne)
+        # After this point, we can assume that sortedArrayOne will always be smaller in length
+        lengthOne, lengthTwo = len(sortedArrayOne), len(sortedArrayTwo)
+        left, right = 0, lengthOne
+
+        # Keep going until we shrink left and right side of the window together.
+        while left <= right:
+            # Find pivot for both the arrays
+            pivotOne = (left + right) // 2
+            pivotTwo = (lengthOne + lengthTwo + 1) // 2 - pivotOne
+
+            # Find the elements around both these pivots
+            maxLeftOne = float('-inf') if pivotOne == 0 else sortedArrayOne[pivotOne - 1]
+            minRightOne = float('inf') if pivotOne == lengthOne else sortedArrayOne[pivotOne]
+            maxLeftTwo = float('-inf') if pivotTwo == 0 else sortedArrayTwo[pivotTwo - 1]
+            minRightTwo = float('inf') if pivotTwo == lengthTwo else sortedArrayTwo[pivotTwo]
+
+            # If max value in left half of first array is less than or equal to min value in right half of second array
+            # And max value in left half of second array is less than or equal to min value in right half of first array
+            # Find median from inner edge elements from all four halves (elements around both pivots).
+            if maxLeftOne <= minRightTwo and maxLeftTwo <= minRightOne:
+                if (lengthOne + lengthTwo) % 2 == 0:
+                    return (max(maxLeftOne, maxLeftTwo) + min(minRightOne, minRightTwo)) / 2
+                else:
+                    return max(maxLeftOne, maxLeftTwo)
+            # If max value in left half of first array is grater than min value in right half of second array, we can eleminate right half of the first array.
+            elif maxLeftOne > minRightTwo:
+                right = pivotOne - 1
+            # Else eleminate the left half of the first element
+            else:
+                left = pivotOne + 1
+
+
+
 
 
 class NumberUtilityTest(unittest.TestCase):
@@ -126,13 +185,22 @@ class NumberUtilityTest(unittest.TestCase):
         self.assertRaises(Exception, NumberUtility.findTwoElementsFrom, None, 9)
 
     def test_addTwoNumbersRepresentedBy_happyCase(self):
-        self.assertEqual("8 --> 0 --> 7", str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([3,4,2]), SinglyLinkedList([4,6,5]))))
-        self.assertEqual("0", str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([0]), SinglyLinkedList([0]))))
+        self.assertEqual("8 --> 0 --> 7", str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([3,4,2]), SinglyLinkedList([4,6,5]))))
+        self.assertEqual("0", str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([0]), SinglyLinkedList([0]))))
         self.assertEqual("1 --> 0 --> 0 --> 0 --> 9 --> 9 --> 9 --> 8", str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([9,9,9,9,9,9,9]), SinglyLinkedList([9,9,9,9]))))
 
     def test_addTwoNumbersRepresentedBy_emptyValues(self):
-        self.assertEqual("None", str(NumberUtility().addTwoNumbersRepresentedBy(None, SinglyLinkedList([]))))
-        self.assertEqual("", str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([]), SinglyLinkedList([]))))
+        self.assertEqual("None", str(NumberUtility.addTwoNumbersRepresentedBy(None, SinglyLinkedList([]))))
+        self.assertEqual("", str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([]), SinglyLinkedList([]))))
+
+    def test_medianOf_happyCase(self):
+        self.assertEqual(2, NumberUtility.medianOf([1,3], [2]))
+        self.assertEqual(2.5, NumberUtility.medianOf([1,2], [3,4]))
+
+    def test_medianOf_emptyInput(self):
+        self.assertEqual(2, NumberUtility.medianOf([1,3], []))
+        self.assertEqual(3.5, NumberUtility.medianOf([], [3,4]))
+        self.assertEqual(None, NumberUtility.medianOf([], []))
 
 if __name__ == "__main__":
     unittest.main()
