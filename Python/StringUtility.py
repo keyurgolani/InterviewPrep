@@ -2,7 +2,8 @@ import unittest
 
 class StringUtility:
     """Given a string s, find the length of the longest substring without repeating characters.
-    A substring is a contiguous non-empty sequence of characters within a string."""
+    A substring is a contiguous non-empty sequence of characters within a string.
+    https://leetcode.com/problems/longest-substring-without-repeating-characters/"""
     @staticmethod
     def longestSubstringWithoutRepeatingCharactersFrom(inputString):
         """Brute Force:
