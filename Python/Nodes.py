@@ -18,10 +18,10 @@ class SinglyNode:
 
 class SinglyNodeTest(unittest.TestCase):
     def test_createNode(self):
-        self.assertEqual('A', str(SinglyNode('A')))
-        self.assertEqual('1', str(SinglyNode(1)))
-        self.assertEqual('None', str(SinglyNode(None)))
-        self.assertEqual('A --> ', str(SinglyNode('A', SinglyNode('B', SinglyNode('C')))))
+        self.assertEqual(str(SinglyNode('A')), 'A')
+        self.assertEqual(str(SinglyNode(1)), '1')
+        self.assertEqual(str(SinglyNode(None)), 'None')
+        self.assertEqual(str(SinglyNode('A', SinglyNode('B', SinglyNode('C')))), 'A --> ')
 
 
 if __name__ == "__main__":

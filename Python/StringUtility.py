@@ -134,23 +134,22 @@ class StringUtility:
 
 class StringUtilityTest(unittest.TestCase):
     def test_longestSubstringWithoutRepeatingCharactersFrom_happyCase(self):
-        self.assertEqual(3, StringUtility.longestSubstringWithoutRepeatingCharactersFrom("abcabcbb"))
-        self.assertEqual(1, StringUtility.longestSubstringWithoutRepeatingCharactersFrom("bbbbb"))
-        self.assertEqual(3, StringUtility.longestSubstringWithoutRepeatingCharactersFrom("pwwkew"))
+        self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom("abcabcbb"), 3)
+        self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom("bbbbb"), 1)
+        self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom("pwwkew"), 3)
 
     def test_longestSubstringWithoutRepeatingCharactersFrom_emptyInput(self):
-        self.assertEqual(0, StringUtility.longestSubstringWithoutRepeatingCharactersFrom(""))
-        self.assertEqual(None, StringUtility.longestSubstringWithoutRepeatingCharactersFrom(None))
+        self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom(""), 0)
+        self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom(None), None)
 
     def test_longestPalindromicSubstringIn_happyCase(self):
-        self.assertEqual("abcba", StringUtility.longestPalindromicSubstringIn("abcba"))
-        # Since this reveals that python unittest prefers `seen` value as first parameter and `actual` parameter as second value, we will do a refactor changing the order of arguments in all the asserts in next commit.
+        self.assertEqual(StringUtility.longestPalindromicSubstringIn("abcba"), "abcba")
         self.assertIn(StringUtility.longestPalindromicSubstringIn("babad"), ["aba", "bab"])
-        self.assertEqual("bb", StringUtility.longestPalindromicSubstringIn("cbbd"))
+        self.assertEqual(StringUtility.longestPalindromicSubstringIn("cbbd"), "bb")
 
     def test_longestPalindromicSubstringIn_emptyInput(self):
-        self.assertEqual("", StringUtility.longestPalindromicSubstringIn(""))
-        self.assertEqual(None, StringUtility.longestPalindromicSubstringIn(None))
+        self.assertEqual(StringUtility.longestPalindromicSubstringIn(""), "")
+        self.assertEqual(StringUtility.longestPalindromicSubstringIn(None), None)
 
 
 if __name__ == "__main__":

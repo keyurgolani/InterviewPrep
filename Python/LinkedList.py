@@ -39,7 +39,7 @@ class SinglyLinkedList():
 
     """Get a stringified version of the linked list"""
     def __str__(self):
-        """Represent linked list with all nodes stringified and joined by a ` --> ` in between."""
+        """Represent linked list with all nodes stringified."""
         result = ""
         if self.head:
             currentNode = self.head
@@ -95,19 +95,19 @@ class SinglyLinkedListTest(unittest.TestCase):
         for idx in range(1, 6):
             linkedList.append(SinglyNode(idx))
         linkedList.append(6)
-        self.assertEqual(" --> ".join([str(idx) for idx in range(7)]), str(linkedList))
+        self.assertEqual(str(linkedList), " --> ".join([str(idx) for idx in range(7)]))
 
     def test_createList_fromIterable(self):
         linkedList = SinglyLinkedList([0,1,2,3,4,5])
-        self.assertEqual(" --> ".join([str(idx) for idx in range(6)]), str(linkedList))
+        self.assertEqual(str(linkedList), " --> ".join([str(idx) for idx in range(6)]))
         linkedList2 = SinglyLinkedList([SinglyNode(idx) for idx in range(6)])
         self.assertEqual(str(linkedList), str(linkedList2))
 
     def test_iterate(self):
         linkedList = SinglyLinkedList([0,1,2,3,4,5])
         for idx, node in enumerate(linkedList):
-            self.assertEqual(SinglyNode, type(node))
-            self.assertEqual(idx, node.value)
+            self.assertEqual(type(node), SinglyNode)
+            self.assertEqual(node.value, idx)
 
     def test_reverse(self):
         linkedList = SinglyLinkedList([0,1,2,3,4,5])

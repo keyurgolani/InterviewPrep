@@ -176,31 +176,31 @@ class NumberUtility:
 
 class NumberUtilityTest(unittest.TestCase):
     def test_findTwoElementsFrom_happyCase(self):
-        self.assertEqual(set([0,1]), set(NumberUtility.findTwoElementsFrom([2,7,11,15], 9)))
-        self.assertEqual(set([1,2]), set(NumberUtility.findTwoElementsFrom([3,2,4], 6)))
-        self.assertEqual(set([0,1]), set(NumberUtility.findTwoElementsFrom([3,3], 6)))
+        self.assertEqual(set(NumberUtility.findTwoElementsFrom([2,7,11,15], 9)), set([0,1]))
+        self.assertEqual(set(NumberUtility.findTwoElementsFrom([3,2,4], 6)), set([1,2]))
+        self.assertEqual(set(NumberUtility.findTwoElementsFrom([3,3], 6)), set([0,1]))
 
     def test_findTwoElementsFrom_emptyInput(self):
         self.assertRaises(Exception, NumberUtility.findTwoElementsFrom, [], 9)
         self.assertRaises(Exception, NumberUtility.findTwoElementsFrom, None, 9)
 
     def test_addTwoNumbersRepresentedBy_happyCase(self):
-        self.assertEqual("8 --> 0 --> 7", str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([3,4,2]), SinglyLinkedList([4,6,5]))))
-        self.assertEqual("0", str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([0]), SinglyLinkedList([0]))))
-        self.assertEqual("1 --> 0 --> 0 --> 0 --> 9 --> 9 --> 9 --> 8", str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([9,9,9,9,9,9,9]), SinglyLinkedList([9,9,9,9]))))
+        self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([3,4,2]), SinglyLinkedList([4,6,5]))), "8 --> 0 --> 7")
+        self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([0]), SinglyLinkedList([0]))), "0")
+        self.assertEqual(str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([9,9,9,9,9,9,9]), SinglyLinkedList([9,9,9,9]))), "1 --> 0 --> 0 --> 0 --> 9 --> 9 --> 9 --> 8")
 
     def test_addTwoNumbersRepresentedBy_emptyValues(self):
-        self.assertEqual("None", str(NumberUtility.addTwoNumbersRepresentedBy(None, SinglyLinkedList([]))))
-        self.assertEqual("", str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([]), SinglyLinkedList([]))))
+        self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(None, SinglyLinkedList([]))), "None")
+        self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([]), SinglyLinkedList([]))), "")
 
     def test_medianOf_happyCase(self):
-        self.assertEqual(2, NumberUtility.medianOf([1,3], [2]))
-        self.assertEqual(2.5, NumberUtility.medianOf([1,2], [3,4]))
+        self.assertEqual(NumberUtility.medianOf([1,3], [2]), 2)
+        self.assertEqual(NumberUtility.medianOf([1,2], [3,4]), 2.5)
 
     def test_medianOf_emptyInput(self):
-        self.assertEqual(2, NumberUtility.medianOf([1,3], []))
-        self.assertEqual(3.5, NumberUtility.medianOf([], [3,4]))
-        self.assertEqual(None, NumberUtility.medianOf([], []))
+        self.assertEqual(NumberUtility.medianOf([1,3], []), 2)
+        self.assertEqual(NumberUtility.medianOf([], [3,4]), 3.5)
+        self.assertEqual(NumberUtility.medianOf([], []), None)
 
 if __name__ == "__main__":
     unittest.main()
