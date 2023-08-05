@@ -1,5 +1,6 @@
 import unittest
 
+
 class StringUtility:
     """Given a string s, find the length of the longest substring without repeating characters.
     A substring is a contiguous non-empty sequence of characters within a string.
@@ -44,11 +45,12 @@ class StringUtility:
             slidingWindowInventory.add(inputString[right])
             # Since we have removed the duplicate of given character before adding another occurrance of it, at this point, our sliding window will be valid. So find it's length and update max length.
             # Valid sliding window is where we have the left and right pointers in such a place where substring contained between them doesn't contain duplicates.
-            slidingWindowMaxLength = max(slidingWindowMaxLength, right - left + 1)
+            slidingWindowMaxLength = max(
+                slidingWindowMaxLength, right - left + 1)
             # Move right pointer over to next element for next iteration.
             right = right + 1
         return slidingWindowMaxLength
-        
+
     """Given a string s, return the longest palindromic substring in s.
     Palindromic - A string is palindromic if it reads the same forward and backward.
     Substring - A substring is a contiguous non-empty sequence of characters within a string.
@@ -125,11 +127,78 @@ class StringUtility:
                     # Same idea as before.
                     lookaroundWindowLength += 1
                 # Same idea as before.
-                longestPalindromicSubstringSoFar = max(longestPalindromicSubstringSoFar, currentPalindromicSubstring, key=len)
+                longestPalindromicSubstringSoFar = max(
+                    longestPalindromicSubstringSoFar, currentPalindromicSubstring, key=len)
         # After running through all possible palindromic substrings with one character at the center and updating the longest one we find.
         # And running through all possible palindromic substrings with a pair of duplicate characters at the center and updating longest one we find.
         # We can simply return the longest palindromic substring so far because we've checked all possible palindromic substrings for given inputString.
         return longestPalindromicSubstringSoFar
+
+    """The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+    P   A   H   N
+    A P L S I I G
+    Y   I   R
+    And then read line by line: "PAHNAPLSIIGYIR"
+    Write the code that will take a string and make this conversion given a number of rows.
+    https://leetcode.com/problems/zigzag-conversion"""
+    @staticmethod
+    def zigzagEncodingOf(inputString, inRowCount):
+        """Brute Force:
+        Zigzag pattern given in the problem description, gives us a very good way of approaching a solution.
+        We start with iterating over each character from the string.
+        For each character, we move to another row in output and append the character to that row.
+        To decide which row we move to, start in increasing pattern from 0 and invert the pattern to decreasing pattern when we reach end row.
+        Vice versa for the first row where we'd invert back the pattern increasing pattern.
+        After creating output rows, join them into a string and return.
+        Runtime: O(n) Space: O(n)
+        Optimized:
+        To approach this problem, we can realize that this is a very niche mathematical problem where for every index in output, we need to figure out the formula to what character from input will go there.
+        We can find out the number of characters that will go in one repetition of the pattern.
+        Here, a pattern is one combination of zig and zag that includes one vertical column and one diagonal column.
+        We can also realize from different combinations of input size and row counts that first and last row will have one characters per pattern and other rows will have two characters per pattern.
+        Since output will have characters appended row by row for given row count, we will iterate through each rows index, identify characters from inputString with math for vertical column characters and diagonal column characters and move on."""
+        # If there's no row count, we cannot for the output so return None
+        if not inRowCount:
+            return None
+        # If input needs to be transformed in one row, it will stay the same.
+        # If input needs to be transformed in rows equal to length of input string, it will stay the same too.
+        if inRowCount == 1 or inRowCount >= len(inputString):
+            return inputString
+        # Initialize an empty answer.
+        answer = ""
+        # On each pattern of zig + zag this many characters will appear.
+        charactersInOnePattern = (2 * inRowCount) - 2
+        # On a row that's not first or last, diagonal elements will appear in addition to vertical elements.
+        # Find out how many elements to jump from a vertical element in the same row to next diagonal element in the same row.
+        diagonalCharacterJump = charactersInOnePattern
+        # Initialize the pointer that will be used to find characters from input string.
+        inputPointer = 0
+        # Sometimes we'll have to keep track of the main pointer and use a backup pointer where we populate the diagonal character appearing in the same row. So initialize that too.
+        backupPointer = 0
+        # Go through each row and append it to answer.
+        for idx in range(inRowCount):
+            # Start pointer with the row index since each row will start from row index character from inputString
+            inputPointer = idx
+            # While the pointer doesn't point outside the string, keep going
+            while inputPointer < len(inputString):
+                # Append the character that inputPointer points to to the answer.
+                answer += inputString[inputPointer]
+                # If currently being processed row is a row other than first and last rows, we have to do extra work to append the diagonal characters.
+                if idx != 0 and idx != inRowCount - 1:
+                    # To reach diagonal character in a row from vertical column character in the same row, we have to jump number of characters below both of these characters in both the columns.
+                    # Total characters in both these columns are charactersInOnePattern. However, if you're at idx row, the characters above given character in each column will elemenate idx amount of characters from jump.
+                    # So need to jump charactersInOnePattern - (2 * idx) characters to find diagonal character in the same row from a vertical column character.
+                    diagonalCharacterJump = charactersInOnePattern - (2 * idx)
+                    # Use the backup pointer to find diagonal character.
+                    backupPointer = inputPointer + diagonalCharacterJump
+                    # Diagonal character can be absent if we're processing last zig + zag pattern where we ran out of inputString before creating zag pattern.
+                    # So if the diagonal character exists, append to answer.
+                    if backupPointer < len(inputString):
+                        answer += inputString[backupPointer]
+                # Since we didn't use primary pointer for diagonal character, primary pointer is at the same place where last vertical column character for given row was found.
+                # Hence, for next vertical column character in given row, jump the charactersInOnePattern.
+                inputPointer += charactersInOnePattern
+        return answer
 
 
 class StringUtilityTest(unittest.TestCase):
@@ -150,6 +219,11 @@ class StringUtilityTest(unittest.TestCase):
     def test_longestPalindromicSubstringIn_emptyInput(self):
         self.assertEqual(StringUtility.longestPalindromicSubstringIn(""), "")
         self.assertEqual(StringUtility.longestPalindromicSubstringIn(None), None)
+
+    def test_zigzagEncodingOf_emptyInput(self):
+        self.assertEqual(StringUtility.zigzagEncodingOf("PAYPALISHIRING", 3), "PAHNAPLSIIGYIR")
+        self.assertEqual(StringUtility.zigzagEncodingOf("PAYPALISHIRING", 4), "PINALSIGYAHRPI")
+        self.assertEqual(StringUtility.zigzagEncodingOf("A", 1), "A")
 
 
 if __name__ == "__main__":
