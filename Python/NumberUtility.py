@@ -171,6 +171,38 @@ class NumberUtility:
                 left = pivotOne + 1
 
 
+    """Given a signed 32-bit integer x, return x with its digits reversed.
+    If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+    Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+    https://leetcode.com/problems/reverse-integer"""
+    @staticmethod
+    def reverse(inputInteger):
+        """Brute Force:
+        To reverse an integer, identify that we are going to have to take least significant digits from inputInteger and put it on the most significant digit place in output.
+        So we simply start with 0 as output. Until inputNumber is 0, repeat below process.
+        Take the least significant digit from inputInteger using % 10. Multiply output with 10 and add obtained least significant digit to output.
+        Finally, return output.
+        To handle negative input, we will set a flag at the beginning of execution that will decide if the output is positive or negative.
+        Note: To restrict this from returning outputs larger than 32-bit signed integers, we can add a size check before updating output at the last line of while loop. And return 0 if the output exceeds max signed 32-bit integer size.
+        Runtime: O(log(n)) Space: O(1)"""
+        # Remember if the input was negative.
+        negativeInput = inputInteger < 0
+        # If input was negative, make it positive. Otherwise, keep it as it is.
+        inputInteger = inputInteger * (-1 if negativeInput else 1)
+        # Start with 0 output.
+        output = 0
+        # Until all the input digits have been translated to output, keep going.
+        while inputInteger != 0:
+            # Find least significant digit from current inputInteger value
+            targetDigit = inputInteger % 10
+            # Remove the least significant digit from current inputInteger value
+            inputInteger = inputInteger // 10
+            # Append the found target digit to output increasing significance of all previously added digits.
+            output = (output * 10) + targetDigit
+        # Finally return output if input was positive, else return a negative version of output.
+        return output if not negativeInput else output * -1
+
+
 
 
 
@@ -201,6 +233,12 @@ class NumberUtilityTest(unittest.TestCase):
         self.assertEqual(NumberUtility.medianOf([1,3], []), 2)
         self.assertEqual(NumberUtility.medianOf([], [3,4]), 3.5)
         self.assertEqual(NumberUtility.medianOf([], []), None)
+
+    def test_reverse(self):
+        self.assertEqual(NumberUtility.reverse(123), 321)
+        self.assertEqual(NumberUtility.reverse(-123), -321)
+        self.assertEqual(NumberUtility.reverse(120), 21)
+        self.assertEqual(NumberUtility.reverse(0), 0)
 
 if __name__ == "__main__":
     unittest.main()
