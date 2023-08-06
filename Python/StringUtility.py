@@ -201,6 +201,65 @@ class StringUtility:
         return answer
 
 
+    """Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer (similar to C/C++'s atoi function).
+    The algorithm for myAtoi(string s) is as follows:
+    Read in and ignore any leading whitespace.
+    Check if the next character (if not already at the end of the string) is '-' or '+'. Read this character in if it is either. This determines if the final result is negative or positive respectively. Assume the result is positive if neither is present.
+    Read in next the characters until the next non-digit character or the end of the input is reached. The rest of the string is ignored.
+    Convert these digits into an integer (i.e. "123" -> 123, "0032" -> 32). If no digits were read, then the integer is 0. Change the sign as necessary (from step 2).
+    If the integer is out of the 32-bit signed integer range [-231, 231 - 1], then clamp the integer so that it remains in the range. Specifically, integers less than -231 should be clamped to -231, and integers greater than 231 - 1 should be clamped to 231 - 1.
+    Return the integer as the final result.
+    Note:
+    Only the space character ' ' is considered a whitespace character.
+    Do not ignore any characters other than the leading whitespace or the rest of the string after the digits.
+    https://leetcode.com/problems/string-to-integer-atoi"""
+    @staticmethod
+    def stringToInteger(inputString):
+        """Brute Force:
+        As instructed, we will start with first character iterating through each character of the input string.
+        We will have a logic for handling each type of character encountered.
+        For white space, we will keep a flag that indicates if we've encountered any digit yet or not.
+        If we have, space, just like any other character, will break the conversion and return answer.
+        If we haven't, space will be ignored because it's a leading whitespace.
+        Similarly, + or - will only be entertained if it's encountered before encountering first digit.
+        Otherwise, they will stop the conversion and return answer.
+        Encountering any other character, will stop the conversion and return answer.
+        Runtime: O(n) Space: O(1)"""
+        # Initialize flags for 
+        # weather we've encountered a digit yet or not 
+        # weather we've encountered a + / - sign or not
+        # weather the sign encountered was negative or not.
+        digitEncountered = False
+        signEncountered =  False
+        isNegative = False
+        # Initialize output as 0
+        output = 0
+        # Go over each character and if eligible character, adding to output before moving to next.
+        for character in inputString:
+            # If the character encountered is + / - sign, we only want to enternatin it if we've not seen a sign or digit before.
+            if character in ['+', '-'] and not digitEncountered and not signEncountered:
+                # Set flag for the sign of the integer encountered and the fact that a sign was encountered
+                isNegative = character == '-'
+                signEncountered = True
+            # If there was any invalid character arrangement encountered, we would exit before moving to next character.
+            # Hence, if the character encountered was a digit, it will always be valid and we will always entertain it.
+            elif character in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+                # Use the digit character to update the output
+                output = (output * 10) + int(character)
+                # Now that we've encountered a digit, set that flag.
+                digitEncountered = True
+            # If a character other than space, digit or + / - sign characters is encountered before space, we would've already fallen in `else` part and exited.
+            # Hence, if the character encountered was a white space, we will only entertain it if we've not seen a sign or a digit before.
+            # We are alright if we've seen white spaces before. This means those, including current character, were leading whitespaces.
+            elif character == ' ' and (not signEncountered and not digitEncountered):
+                continue
+            # If we encounter a character that doesn't fulfil any of the above pattern, we need to stop conversion and return whatever output we've formed so far.
+            else:
+                return output
+        # At last, if we had encountered a sign, depending on the sign flag, update the result before returning
+        return output * (-1 if isNegative else 1)
+
+
 class StringUtilityTest(unittest.TestCase):
     def test_longestSubstringWithoutRepeatingCharactersFrom_happyCase(self):
         self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom("abcabcbb"), 3)
@@ -224,6 +283,20 @@ class StringUtilityTest(unittest.TestCase):
         self.assertEqual(StringUtility.zigzagEncodingOf("PAYPALISHIRING", 3), "PAHNAPLSIIGYIR")
         self.assertEqual(StringUtility.zigzagEncodingOf("PAYPALISHIRING", 4), "PINALSIGYAHRPI")
         self.assertEqual(StringUtility.zigzagEncodingOf("A", 1), "A")
+
+    def test_stringToInteger_happyCase(self):
+        self.assertEqual(StringUtility.stringToInteger("42"), 42)
+        self.assertEqual(StringUtility.stringToInteger("   -42"), -42)
+        self.assertEqual(StringUtility.stringToInteger("4193 with words"), 4193)
+
+    def test_stringToInteger_noNumber(self):
+        self.assertEqual(StringUtility.stringToInteger("a42"), 0)
+        self.assertEqual(StringUtility.stringToInteger("   - -42"), 0)
+        self.assertEqual(StringUtility.stringToInteger("0   -42"), 0)
+        self.assertEqual(StringUtility.stringToInteger("   --42"), 0)
+        self.assertEqual(StringUtility.stringToInteger("0 with words"), 0)
+        self.assertEqual(StringUtility.stringToInteger("+     123"), 0)
+        self.assertEqual(StringUtility.stringToInteger("+0 1 2 3"), 0)
 
 
 if __name__ == "__main__":
