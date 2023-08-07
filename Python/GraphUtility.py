@@ -39,7 +39,8 @@ class GraphUtility:
         Hence, we will maintain this start node value as well.
         Since we identified that a valid input will be a structure similar to a doubly linked list joined from end to it's head, we will be able to weed out invalid input that is otherwise a perfectly acceptable graph, by verifying if each node only connects to two other nodes.
         Now, graphs with less than 3 nodes are still valid cycles but will be invalidated by our logic. So we handle those edge cases in the beginning.
-        Realize that in cases of less than 3 nodes in graph, the order of nodes doesn't matter."""
+        Realize that in cases of less than 3 nodes in graph, the order of nodes doesn't matter.
+        Runtime: O(n) Space: O(1)"""
         # If graph is None, return an empty string
         if not graph:
             return ""
@@ -102,7 +103,7 @@ class GraphUtilityTest(unittest.TestCase):
         D - C
         
         A - B - C - D - E
-        |			  /
+        |             /
         I - H - G - F
         """
         self.assertEqual(GraphUtility.stringifyLoopedGraph(None), "")
