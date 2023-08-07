@@ -202,6 +202,40 @@ class NumberUtility:
         # Finally return output if input was positive, else return a negative version of output.
         return output if not negativeInput else output * -1
 
+    
+    """Given an integer x, return true if x is a palindrome, and false otherwise.
+    Palindrome: An integer is a palindrome when it reads the same forward and backward.
+    For example, 121 is a palindrome while 123 is not.
+    https://leetcode.com/problems/palindrome-number
+    
+    Follow up: Could you solve it without converting the integer to a string?"""
+    @staticmethod
+    def isPalindrome(inputNumber):
+        """Brute Force:
+        For checking palindrome, general approach is to compare elements from start and end of a string of elements and verify if they're the same.
+        So a brute force simple solution would be to convert the inputNumber to string and perform palindrome check on it.
+        Runtime: O(n) Space: O(1) --> where n is the characters in the inputNumber
+        Optimized:
+        The question asks for solution without converting the number to string.
+        For this, we can identify that a negative number reversed will always have a negative sign at the end of number which isn't a valid integer.
+        Hence, we will say that no negative number will ever be palindromic.
+        For all positive numbers, we can go back to the root of palindrome definition.
+        We can reverse the input number and see if the result is the same as inputNumber.
+        Runtime: O(log(n)) Space: O(1) --> where n is the inputNumber itself
+        
+        Note: Effectively the runtime complexity is the same for both brute force approach and optimized approach.
+        The only reason for calling optimized approach optimized, is that 
+        1. it will eleminate negative numbers right away
+        2. will not need to convert integer to string per asked in problem statement."""
+        # If input number is None, it's not palindrome.
+        if inputNumber is None:
+            return False
+        # If the number is negative, it's reverse doesn't make a valid number. So not a palindrome.
+        if inputNumber < 0:
+            return False
+        # If the reverse of the number is same as number itself, it's a palindrome, otherwise not.
+        return inputNumber == NumberUtility.reverse(inputNumber)
+
 
 
 
@@ -239,6 +273,15 @@ class NumberUtilityTest(unittest.TestCase):
         self.assertEqual(NumberUtility.reverse(-123), -321)
         self.assertEqual(NumberUtility.reverse(120), 21)
         self.assertEqual(NumberUtility.reverse(0), 0)
+
+    def test_isPalindrome_happyCase(self):
+        self.assertTrue(NumberUtility.isPalindrome(121))
+        self.assertFalse(NumberUtility.isPalindrome(-121))
+        self.assertFalse(NumberUtility.isPalindrome(10))
+
+    def test_isPalindrome_emptyInput(self):
+        self.assertTrue(NumberUtility.isPalindrome(0))
+        self.assertFalse(NumberUtility.isPalindrome(None))
 
 if __name__ == "__main__":
     unittest.main()
