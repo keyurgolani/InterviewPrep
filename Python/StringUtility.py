@@ -260,6 +260,55 @@ class StringUtility:
         return output * (-1 if isNegative else 1)
 
 
+    """Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
+    '.' Matches any single character.​​​​
+    '*' Matches zero or more of the preceding element.
+    The matching should cover the entire input string (not partial).
+    https://leetcode.com/problems/regular-expression-matching"""
+    @staticmethod
+    def regexMatching(inputString, pattern):
+        """Brute Force:
+        Since one character from the pattern can match multiple characters from inputString, we will start by enumerating each character from pattern.
+        We will also have a pointer that will point to the current character to be matched on inputString.
+        For each character that's not a special character, we will match the character from pattern to the inputString as it is.
+        Whenever, we encounter a '.' character, we will match any character with it from inputString.
+        Whenever, we encounter a '*' character, we will remember what the previous character in the pattern was and use that logic to match character in inputString.
+        Remember, when using a combination of '.*', we might end up matching the whole string which is not what we want.
+        Hence, we will also keep track of next character in pattern. If we encounter that character, we move on to it in pattern abandoning matching effort for '.*'.
+        Runtime: O(n) Space: O(1) --> where n is the length of inputString"""
+        # Initialize pointers for pattern and inputString for matching
+        inputStringPointer, patternPointer = 0, 0
+        # Keep looping till we run out of either the pattern or the inputString
+        while patternPointer < len(pattern) and inputStringPointer < len(inputString):
+            # Initialize current character from pattern, previous character from pattern and next character from pattern for easy access.
+            currentCharacter = pattern[patternPointer]
+            nextCharacter = pattern[patternPointer + 1] if patternPointer + 1 < len(pattern) else None
+            previousCharacter = pattern[patternPointer - 1] if patternPointer > 0 else None
+            if currentCharacter == '*':
+                # If we are on a '*' character, we see if the next character from pattern matches current inputString character.
+                # If so, we want to eleminate matching of '*' and move on.
+                if nextCharacter == inputString[inputStringPointer]:
+                    patternPointer += 1
+                # If not, we want to match the previous character (the one prefixed to the '*' character) with current inputString character
+                else:
+                    if previousCharacter != inputString[inputStringPointer] and previousCharacter != '.':
+                        return False
+                    # We only want to move forward with inputString since the current character '*' can match more characters from inputString.
+                    inputStringPointer += 1
+            # If we are not on a '*' character, special logic is essentially very limited.
+            else:
+                # We just say pattern didn't match if either pattern's current character is not a '.' or if pattern and inputString characters didn't match.
+                if currentCharacter != inputString[inputStringPointer] and currentCharacter != '.':
+                    return False
+                # Otherwise, we say we found a match and in this case the pattern characters won't be able to match more characters from inputString. So move forward in both pattern and inputString.
+                inputStringPointer += 1
+                patternPointer += 1
+        # At the end, we want to ensure that the pattern matched the whole of the string. So if we reach the end of inputString at the end, return True otherwise return False.
+        return inputStringPointer == len(inputString)
+
+
+
+
 class StringUtilityTest(unittest.TestCase):
     def test_longestSubstringWithoutRepeatingCharactersFrom_happyCase(self):
         self.assertEqual(StringUtility.longestSubstringWithoutRepeatingCharactersFrom("abcabcbb"), 3)
@@ -297,6 +346,18 @@ class StringUtilityTest(unittest.TestCase):
         self.assertEqual(StringUtility.stringToInteger("0 with words"), 0)
         self.assertEqual(StringUtility.stringToInteger("+     123"), 0)
         self.assertEqual(StringUtility.stringToInteger("+0 1 2 3"), 0)
+
+    def test_regexMatching_happyCase(self):
+        self.assertFalse(StringUtility.regexMatching("aa", "a"))
+        self.assertTrue(StringUtility.regexMatching("aa", "a*"))
+        self.assertTrue(StringUtility.regexMatching("ab", ".*"))
+        self.assertTrue(StringUtility.regexMatching("This is a full sentense. Will contain many many letters, white-spaces and punctuations!", "This is a full sentense. Will contain many many letters, white-spaces and punctuations!"))
+
+    def test_regexMatching_edgeCases(self):
+        self.assertTrue(StringUtility.regexMatching("", ""))
+        self.assertFalse(StringUtility.regexMatching("aa", "."))
+        self.assertFalse(StringUtility.regexMatching("aa", "*"))
+        self.assertTrue(StringUtility.regexMatching("This is a full sentense. Will contain many many letters, white-spaces and punctuations!", ".*"))
 
 
 if __name__ == "__main__":
