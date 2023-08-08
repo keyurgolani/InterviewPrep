@@ -85,6 +85,8 @@ class ArrayUtility:
         For each pair of buildings, find the water contained between these buildings and update a global max.
         After performing this until both the pointers meet eachother, the global max we've found should be the max water contained with any pair of buildings.
         Runtime: O(n) Space: O(1)"""
+        if not buildingHeights:
+            return 0
         # Initialize left pointer, right pointer and global max water contained variable
         maxWaterContained, leftPointer, rightPointer = 0, 0, len(buildingHeights) - 1
         # Iterate until left pointer and right pointer meet eachother.
@@ -116,6 +118,8 @@ class ArrayUtilityTest(unittest.TestCase):
     def test_containerWithMostWater(self):
         self.assertEqual(ArrayUtility.containerWithMostWater([1, 8, 6, 2, 5, 4, 8, 3, 7]), 49)
         self.assertEqual(ArrayUtility.containerWithMostWater([1, 1]), 1)
+        self.assertEqual(ArrayUtility.containerWithMostWater([]), 0)
+        self.assertEqual(ArrayUtility.containerWithMostWater(None), 0)
 
 
 if __name__ == "__main__":
