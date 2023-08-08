@@ -65,6 +65,43 @@ class ArrayUtility:
         return findMaxProfitableWindowCount(0, len(stockPrices) - 1)
 
 
+    """You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+    Find two lines that together with the x-axis form a container, such that the container contains the most water.
+    Return the maximum amount of water a container can store.
+    Notice that you may not slant the container."""
+    @staticmethod
+    def containerWithMostWater(buildingHeights):
+        """Brute Force:
+        To find the water contained between any two building, we would need to find the distance between them and multiply with the height of shortest building.
+        Any more water will spillover from the smaller building.
+        Simplest way to find the maximum water contained between any two buildings would be to pick each combination of two buildings one by one and iterate through them.
+        For each combination of two buildings, find the water contained by those two. Compare against a global max and if larger, update the global max.
+        At the end of all iterations, return the maximum water that can be contained.
+        Runtime: O(n^2) Space: O(1)
+        Optimized:
+        To optimize the approach to this, we need to realize that water bound between a pair of buildings is limited by the height of the building that's shorter.
+        However, the two maximum height buildings can be very near to eachother and contain much lesser water than what other smaller height buildings that are far apart could.
+        Hence, to optimize this, we start with the max distanced buildings. Identify the shorter building and move inward from that direction.
+        For each pair of buildings, find the water contained between these buildings and update a global max.
+        After performing this until both the pointers meet eachother, the global max we've found should be the max water contained with any pair of buildings.
+        Runtime: O(n) Space: O(1)"""
+        # Initialize left pointer, right pointer and global max water contained variable
+        maxWaterContained, leftPointer, rightPointer = 0, 0, len(buildingHeights) - 1
+        # Iterate until left pointer and right pointer meet eachother.
+        while leftPointer < rightPointer:
+            # Find water contained between two buildings marked by left pointer and right pointer
+            waterContained = (rightPointer - leftPointer) * min(buildingHeights[leftPointer], buildingHeights[rightPointer])
+            # If water contained between these two buildings is more than the max found so far, update the max
+            maxWaterContained = max(waterContained, maxWaterContained)
+            # Find the smaller heighted building from the pair of buildings in question and move that pointer inwards.
+            if buildingHeights[leftPointer] < buildingHeights[rightPointer]:
+                leftPointer += 1
+            else:
+                rightPointer -= 1
+        # After finishing all iterations, return the global max water contained found so far.
+        return maxWaterContained
+
+
 class ArrayUtilityTest(unittest.TestCase):
     def test_maxProfitableWindowCount(self):
         self.assertEqual(ArrayUtility.maxProfitableWindowCount([2, 3, 2]), 5)
@@ -75,6 +112,10 @@ class ArrayUtilityTest(unittest.TestCase):
         self.assertEqual(ArrayUtility.maxProfitableWindowCount([3, 2, 3]), 6)
         self.assertEqual(ArrayUtility.maxProfitableWindowCount([2]), 1)
         self.assertEqual(ArrayUtility.maxProfitableWindowCount([]), 0)
+
+    def test_containerWithMostWater(self):
+        self.assertEqual(ArrayUtility.containerWithMostWater([1, 8, 6, 2, 5, 4, 8, 3, 7]), 49)
+        self.assertEqual(ArrayUtility.containerWithMostWater([1, 1]), 1)
 
 
 if __name__ == "__main__":
