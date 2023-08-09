@@ -306,6 +306,41 @@ class StringUtility:
         # At the end, we want to ensure that the pattern matched the whole of the string. So if we reach the end of inputString at the end, return True otherwise return False.
         return inputStringPointer == len(inputString)
 
+    
+    """Write a function to find the longest common prefix string amongst an array of strings.
+    If there is no common prefix, return an empty string "".
+    https://leetcode.com/problems/longest-common-prefix"""
+    @staticmethod
+    def longestCommonPrefix(stringArray):
+        """To find longest common prefix to all the strings in array, we will have to go through each string from array 
+        comparing characters one by one and determining longest common prefix based on if the characters match for all string or not.
+        Here, one way to put in a small optimization would be to realize that the longest common prefix possible is the shortest string in the array.
+        Hence, we will find out the smallest string at the beginning. Go through each character on that string and ensure that this character appears on the same position for all other strings in array too.
+        If they do, we identify this character a part of common prefix for the array of strings and we move on to next character in the smallest string. 
+        If they don't, means the common prefix ended at this character. Hence, what prefix we've found so far, will be the longest common prefix.
+        Hence, we return this prefix. If we reach end of the shortest string while comparing, whole shortest string is the common prefix for the array. Hence we return the whole things."""
+        # Initialize the longest common prefix empty.
+        longestCommonPrefix = ""
+        # If the stringArray is empty, longest common prefix will stay empty.
+        if not stringArray:
+            return longestCommonPrefix
+        # If there's only one string in stringArray, return that string since it's the prefix itself.
+        if len(stringArray) == 1:
+            return stringArray[0]
+        # Find shortest string among all strings in stringArray
+        shortestString = min(stringArray, key=len)
+        # Enumerate over all characters of shortest string
+        for idx, character in enumerate(list(shortestString)):
+            # Compare each character in shortest string with the characters at the same index in all the strings in stringArray
+            if all([character == currentString[idx] for currentString in stringArray]):
+                # If all of them match, we add that character to the longest common prefix
+                longestCommonPrefix += character
+            else:
+                # Whenever there's a mismatch, the common prefix cannot go on, so we break and stop comparing.
+                break
+        # Whatever we've found so far, is the longest the common prefix can be. So return that.
+        return longestCommonPrefix
+
 
 
 
@@ -358,6 +393,13 @@ class StringUtilityTest(unittest.TestCase):
         self.assertFalse(StringUtility.regexMatching("aa", "."))
         self.assertFalse(StringUtility.regexMatching("aa", "*"))
         self.assertTrue(StringUtility.regexMatching("This is a full sentense. Will contain many many letters, white-spaces and punctuations!", ".*"))
+
+    def test_longestCommonPrefix(self):
+        self.assertEqual(StringUtility.longestCommonPrefix(["flower","flow","flight"]), "fl")
+        self.assertEqual(StringUtility.longestCommonPrefix(["flower","flow","flowering"]), "flow")
+        self.assertEqual(StringUtility.longestCommonPrefix(["dog","racecar","car"]), "")
+        self.assertEqual(StringUtility.longestCommonPrefix([]), "")
+        self.assertEqual(StringUtility.longestCommonPrefix(None), "")
 
 
 if __name__ == "__main__":
