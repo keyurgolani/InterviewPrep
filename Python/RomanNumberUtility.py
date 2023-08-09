@@ -49,7 +49,8 @@ class RomanNumberUtility:
         Here, since our map is of constant, limited size, we iterate over the map and identify if input integer number will use given mapped roman representation for it.
         Since the roman representation will have number representations in order of largest to smallest, we can simply start from largest value and keep appending the representations that we use to an answer.
         When we identify that one roman number representation will be used in the answer, we reduce the value of input integer number by that much and keep looking.
-        At the end, when input integer number is 0, that means we've converted the whole number to roman representation and we return the answer."""
+        At the end, when input integer number is 0, that means we've converted the whole number to roman representation and we return the answer.
+        Runtime: O(n) Space: O(1) --> This is because all inputs lesser than 1000 value will be converted in constant time. But for all values above 1000, we will do linearly one more iteration per 1000 value increase. Which is still linear."""
         # Start with an empty answer. Equivelant to 0 integer number.
         answer = ""
         # If integer number is not present, empty answer is good enough.
@@ -67,6 +68,52 @@ class RomanNumberUtility:
         # Meaning it will be 0. Hence, return the answer.
         return answer
 
+    """Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+    
+    Symbol       Value
+    I             1
+    V             5
+    X             10
+    L             50
+    C             100
+    D             500
+    M             1000
+    
+    For example, 2 is written as II in Roman numeral, just two ones added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+    Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+    
+    I can be placed before V (5) and X (10) to make 4 and 9. 
+    X can be placed before L (50) and C (100) to make 40 and 90. 
+    C can be placed before D (500) and M (1000) to make 400 and 900.
+    
+    Given a roman numeral, convert it to an integer.
+    https://leetcode.com/problems/roman-to-integer"""
+    @staticmethod
+    def romanToInteger(romanRepresentationNumber):
+        """Brute Force:
+        Since we have converted integer to roman now, we know that at the beginning, we will always see grater value representations in roman number.
+        Simplest way would be to iterate through the mapping again and expect the values from largest to smallest.
+        Whenever we find our expectations met, we add corresponding direct integer value to the answer.
+        At the end after iterating through the whole string, we return the answer.
+        Runtime: O(n) Space: O(1)"""
+        # Start with 0 answer.
+        answer = 0
+        # If input is empty, 0 answer is good enough. Return it.
+        if not romanRepresentationNumber:
+            return answer
+        # Iterate over all possible direct roman representations of integer numbers in decreasing order.
+        for symbol, value in sorted(RomanNumberUtility.romanToIntegerLookup.items(), key=lambda item: item[1], reverse=True):
+            # While the symbol we are evaluating, appears at the beginning of the roman representation of number,
+            while romanRepresentationNumber.startswith(symbol):
+                # Add its directly corresponding number value to the answer
+                answer += value
+                # Remove the first occurrance of given roman symbol from whole number's representation.
+                romanRepresentationNumber = romanRepresentationNumber.replace(symbol, '', 1)
+        # At the end, we will go over smallest value in the map, 1.
+        # Hence, in the end, roman string should be empty. Return answer.
+        # Note: We could probably add a validation if the roman string became empty at this point. If we were to add roman string validations at other places too, this would be one place that would help.
+        return answer
+
 
 class RomanNumberUtilityTest(unittest.TestCase):
     def test_integerToRoman_happyCase(self):
@@ -80,6 +127,18 @@ class RomanNumberUtilityTest(unittest.TestCase):
     def test_integerToRoman_zeroValue(self):
         self.assertEqual(RomanNumberUtility.integerToRoman(0), "")
         self.assertEqual(RomanNumberUtility.integerToRoman(None), "")
+
+    def test_romanToInteger_happyCase(self):
+        self.assertEqual(RomanNumberUtility.romanToInteger("II"), 2)
+        self.assertEqual(RomanNumberUtility.romanToInteger("XII"), 12)
+        self.assertEqual(RomanNumberUtility.romanToInteger("XXVII"), 27)
+        self.assertEqual(RomanNumberUtility.romanToInteger("III"), 3)
+        self.assertEqual(RomanNumberUtility.romanToInteger("LVIII"), 58)
+        self.assertEqual(RomanNumberUtility.romanToInteger("MCMXCIV"), 1994)
+
+    def test_romanToInteger_zeroValue(self):
+        self.assertEqual(RomanNumberUtility.romanToInteger(""), 0)
+        self.assertEqual(RomanNumberUtility.romanToInteger(None), 0)
 
 
 if __name__ == "__main__":
