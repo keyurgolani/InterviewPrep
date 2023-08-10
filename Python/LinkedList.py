@@ -115,13 +115,16 @@ class SinglyLinkedList():
             raise Exception("Invalid State")
         if integerPosition == 0:
             self.head = self.head.next
-        dummyNode = currentNode = SinglyNode(None, self.head)
-        while currentNode.next and integerPosition:
-            currentNode = currentNode.next
-            integerPosition -= 1
-        deleteNode = currentNode.next
-        currentNode.next = currentNode.next.next
-        del deleteNode
+        else:
+            # Use dummy node to always be on metaforically `previous` node to what we want to remove
+            # This will work because we've already taken care of removing first node if asked.
+            currentNode = SinglyNode(None, self.head)
+            while currentNode.next and integerPosition:
+                currentNode = currentNode.next
+                integerPosition -= 1
+            deleteNode = currentNode.next
+            currentNode.next = currentNode.next.next
+            del deleteNode
         
         
 
@@ -172,6 +175,9 @@ class SinglyLinkedListTest(unittest.TestCase):
         self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(1, 6) + TestUtility.stringRange(7, 11)))
         self.assertRaises(Exception, linkedList.removeNth)
         self.assertRaises(Exception, SinglyLinkedList().removeNth, 1)
+        linkedList2 = SinglyLinkedList([0, 1, 2, 3, 4])
+        linkedList2.removeNth(0)
+        self.assertEqual(str(linkedList2), " --> ".join(TestUtility.stringRange(1, 5)))
 
 
 
