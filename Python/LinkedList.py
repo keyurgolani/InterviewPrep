@@ -1,15 +1,15 @@
 import unittest
 from Nodes import SinglyNode
 from collections.abc import Iterable
+from TestUtility import TestUtility
 
 """Singly Linked List is a linked list that uses singly nodes to store a list.
 This means that each node of the linked list will have only its own value and pointer to the next node in the list.
 The linked list itself contains only the pointer to the head node of the linked list where the list starts."""
 class SinglyLinkedList():
 
-    head = None
-
     def __init__(self, head=None):
+        self.head = None
         # Using type of head value passed in to see how linked list should be initialized.
         if isinstance(head, Iterable):
             # If head is a list of values add them all one by one and create a linked list.
@@ -48,12 +48,21 @@ class SinglyLinkedList():
                 currentNode = currentNode.next
         return result
 
+    """Iterate over each element from the linked list"""
+    def __iter__(self):
+        currentNode = self.head
+        while currentNode:
+            yield currentNode
+            currentNode = currentNode.next
+
     """Append an element at the back of the linked list"""
     def append(self, next):
         targetNode = None
-        # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a SinglyNode object created from incoming value.
+        # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
         if type(next) == SinglyNode:
             targetNode = next
+        elif type(next) == SinglyLinkedList:
+            targetNode = next.head
         else:
             targetNode = SinglyNode(next)
         if self.head is None:
@@ -66,12 +75,22 @@ class SinglyLinkedList():
                 currentNode = currentNode.next
             currentNode.next = targetNode
 
-    """Iterate over each element from the linked list"""
-    def __iter__(self):
-        currentNode = self.head
-        while currentNode:
-            yield currentNode
-            currentNode = currentNode.next
+    """Prepend an element at the front of the linked list"""
+    def prepend(self, first):
+        targetNode = None
+        newHead = None
+        # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
+        if type(first) == SinglyNode:
+            targetNode = newHead = first
+        elif type(first) == SinglyLinkedList:
+            currentNode = newHead = first.head
+            while currentNode.next:
+                currentNode = currentNode.next
+            targetNode = currentNode
+        else:
+            targetNode = newHead = SinglyNode(first)
+        targetNode.next = self.head
+        self.head = newHead
 
     """Reverse the order of linked list elements"""
     def reverse(self):
@@ -88,6 +107,24 @@ class SinglyLinkedList():
             # At the end of linked list pointer reversals, the current node will be None. Hence, previous is the node used to be the last node. Make that the new head.
             self.head = previous
 
+    """Remove nth node from list"""
+    def removeNth(self, integerPosition):
+        if integerPosition is None:
+            raise Exception("Invalid Input")
+        if self.head is None:
+            raise Exception("Invalid State")
+        if integerPosition == 0:
+            self.head = self.head.next
+        dummyNode = currentNode = SinglyNode(None, self.head)
+        while currentNode.next and integerPosition:
+            currentNode = currentNode.next
+            integerPosition -= 1
+        deleteNode = currentNode.next
+        currentNode.next = currentNode.next.next
+        del deleteNode
+        
+        
+
 
 class SinglyLinkedListTest(unittest.TestCase):
     def test_createList_singleValues(self):
@@ -95,11 +132,11 @@ class SinglyLinkedListTest(unittest.TestCase):
         for idx in range(1, 6):
             linkedList.append(SinglyNode(idx))
         linkedList.append(6)
-        self.assertEqual(str(linkedList), " --> ".join([str(idx) for idx in range(7)]))
+        self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(7)))
 
     def test_createList_fromIterable(self):
         linkedList = SinglyLinkedList([0,1,2,3,4,5])
-        self.assertEqual(str(linkedList), " --> ".join([str(idx) for idx in range(6)]))
+        self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(6)))
         linkedList2 = SinglyLinkedList([SinglyNode(idx) for idx in range(6)])
         self.assertEqual(str(linkedList), str(linkedList2))
 
@@ -114,6 +151,27 @@ class SinglyLinkedListTest(unittest.TestCase):
         linkedList.reverse()
         linkedList2 = SinglyLinkedList([5,4,3,2,1,0])
         self.assertEqual(str(linkedList), str(linkedList2))
+
+    def test_append(self):
+        linkedList = SinglyLinkedList([0,1,2,3,4,5])
+        linkedList.append(SinglyNode(6))
+        linkedList.append(7)
+        linkedList.append(SinglyLinkedList(SinglyNode(8, SinglyNode(9, SinglyNode(10)))))
+        self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(11)))
+
+    def test_prepend(self):
+        linkedList = SinglyLinkedList([6, 7, 8, 9, 10])
+        linkedList.prepend(SinglyNode(5))
+        linkedList.prepend(4)
+        linkedList.prepend(SinglyLinkedList(SinglyNode(1, SinglyNode(2, SinglyNode(3)))))
+        self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(1, 11)))
+
+    def test_removeNth(self):
+        linkedList = SinglyLinkedList([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        linkedList.removeNth(5)
+        self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(1, 6) + TestUtility.stringRange(7, 11)))
+        self.assertRaises(Exception, linkedList.removeNth)
+        self.assertRaises(Exception, SinglyLinkedList().removeNth, 1)
 
 
 
