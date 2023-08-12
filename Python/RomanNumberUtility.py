@@ -1,6 +1,8 @@
 import unittest
 
+
 class RomanNumberUtility:
+    """Contains methods that operate on roman numbers."""
 
     # Lookup to help find directly corresponding integer value from roman representation
     romanToIntegerLookup = {
@@ -21,29 +23,31 @@ class RomanNumberUtility:
 
     # Lookup to help find directly corresponding roman representation from an integer value
     integerToRomanLookup = dict([(value, key) for key, value in romanToIntegerLookup.items()])
-    
-    """Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
-    Symbol       Value
-    I             1
-    V             5
-    X             10
-    L             50
-    C             100
-    D             500
-    M             1000
-    For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
-    Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
-    
-    I can be placed before V (5) and X (10) to make 4 and 9. 
-    X can be placed before L (50) and C (100) to make 40 and 90. 
-    C can be placed before D (500) and M (1000) to make 400 and 900.
-    
-    Given an integer, convert it to a roman numeral.
-    https://leetcode.com/problems/integer-to-roman"""
+
     @staticmethod
     def integerToRoman(integerNumber):
-        """Brute Force:
-        Numbers in roman are represented with above described logic.
+        """Problem:
+        Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+        Symbol       Value
+        I             1
+        V             5
+        X             10
+        L             50
+        C             100
+        D             500
+        M             1000
+        For example, 2 is written as II in Roman numeral, just two one's added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+        Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+        I can be placed before V (5) and X (10) to make 4 and 9.
+        X can be placed before L (50) and C (100) to make 40 and 90.
+        C can be placed before D (500) and M (1000) to make 400 and 900.
+
+        Given an integer, convert it to a roman numeral.
+        https://leetcode.com/problems/integer-to-roman
+
+        Brute Force Solution:
+        Numbers in roman are represented with above-described logic.
         Hence, to identify roman representation for an input integer number, we can create a mapping of what integer number has a readily available roman value representing it.
         For all the other values, we will use a combination of lesser value roman representations to represent it.
         Here, since our map is of constant, limited size, we iterate over the map and identify if input integer number will use given mapped roman representation for it.
@@ -68,29 +72,30 @@ class RomanNumberUtility:
         # Meaning it will be 0. Hence, return the answer.
         return answer
 
-    """Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
-    
-    Symbol       Value
-    I             1
-    V             5
-    X             10
-    L             50
-    C             100
-    D             500
-    M             1000
-    
-    For example, 2 is written as II in Roman numeral, just two ones added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
-    Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
-    
-    I can be placed before V (5) and X (10) to make 4 and 9. 
-    X can be placed before L (50) and C (100) to make 40 and 90. 
-    C can be placed before D (500) and M (1000) to make 400 and 900.
-    
-    Given a roman numeral, convert it to an integer.
-    https://leetcode.com/problems/roman-to-integer"""
     @staticmethod
     def romanToInteger(romanRepresentationNumber):
-        """Brute Force:
+        """Problem:
+        Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+        Symbol       Value
+        I             1
+        V             5
+        X             10
+        L             50
+        C             100
+        D             500
+        M             1000
+
+        For example, 2 is written as II in Roman numeral, just two ones added together. 12 is written as XII, which is simply X + II. The number 27 is written as XXVII, which is XX + V + II.
+        Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+
+        I can be placed before V (5) and X (10) to make 4 and 9.
+        X can be placed before L (50) and C (100) to make 40 and 90.
+        C can be placed before D (500) and M (1000) to make 400 and 900.
+
+        Given a roman numeral, convert it to an integer.
+        https://leetcode.com/problems/roman-to-integer
+
+        Brute Force Solution:
         Since we have converted integer to roman now, we know that at the beginning, we will always see grater value representations in roman number.
         Simplest way would be to iterate through the mapping again and expect the values from largest to smallest.
         Whenever we find our expectations met, we add corresponding direct integer value to the answer.

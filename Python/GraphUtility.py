@@ -1,35 +1,40 @@
 import unittest
 
+
 class GraphUtility:
-    """You are given an adjacency list representation of a graph. For example,
-    ```
-    input = {
-        "A": ["B", "D"],
-        "B": ["C", "A"],
-        "C": ["D", "B"],
-        "D": ["A", "C"]
-    }
-    ```
-    For example, this makes a graph that looks like this
-    
-    A - B
-    |   |
-    D - C
-    
-    Let's assume that our input will be in the form where the graph will always make a loop like this.
-    Can you write a function that will take this input and return a stringified version of this graph?
-    For example, the return value for above example, could be ABCD.
-    Follow Up:
-    Rather than when we said the input will always look like a loop of nodes, let's say there is no guarantee.
-    What's the optimization you'd make to this code to weed out the invalid input that's not a clean cycle of nodes."""
+    """Contains methods that operate on Graphs"""
+
     @staticmethod
     def stringifyLoopedGraph(graph):
-        """Brute Force:
+        """Problem:
+        You are given an adjacency list representation of a graph. For example,
+        ```
+        input = {
+            "A": ["B", "D"],
+            "B": ["C", "A"],
+            "C": ["D", "B"],
+            "D": ["A", "C"]
+        }
+        ```
+        For example, this makes a graph that looks like this
+        A - B
+        |   |
+        D - C
+        Let's assume that our input will be in the form where the graph will always make a loop like this.
+        Can you write a function that will take this input and return a stringified version of this graph?
+        For example, the return value for above example, could be ABCD.
+
+        Follow Up:
+        Rather than when we said the input will always look like a loop of nodes, let's say there is no guarantee.
+        What's the optimization you'd make to this code to weed out the invalid input that's not a clean cycle of nodes.
+
+        Brute Force Solution:
         For a very basic implementation for this, we would basically implement a graph traversal that would visit each node one by one and append to result for returning.
         Since we want the stringified version to be accurate to the graph's order of nodes, we would have to go deeper into the graph at each step.
         Hence, we could use depth first traversal and visit each element one by one until we run out of nodes that are not visited.
         Runtime: O(n) Space: O(n) --> This is because we will visit each node once. And breadth first will use a stack to manage traversal that will at max hold all the elements in graph.
-        Optimized:
+
+        Optimized Solution:
         A much better approach comes to mind when we make use of the given constraint that there will only ever be cycles of nodes in input graph. And all other graphs will be invalid.
         This means that, this will be a glorified doubly linked list that has a cycle and connects the last node to it's first node creating a loop.
         Meaning, we can employ much simpler linked list traversal logic here to follow the graph and stringify each node.
@@ -57,7 +62,7 @@ class GraphUtility:
         currentNode = startNode = list(graph.keys())[0]
         # Initiate prevNode as the node that we travarsed to currentNode from
         # Also initialize nextNode that we will traverse to
-        nextNode = prevNode = None    # At the beginning we didn't come from anywhere
+        nextNode = prevNode = None  # At the beginning we didn't come from anywhere
         while nextNode != startNode:
             # Process the currentNode
             result.append(currentNode)
@@ -75,63 +80,61 @@ class GraphUtility:
 
 class GraphUtilityTest(unittest.TestCase):
     def test_stringifyLoopedGraph(self):
-        """Testing below inputs:
+        """
         None
-        
-        A
-        
-        A - B
-        
-        A - B
-        |   |
-        D - C
-        
-        A - B
-        | /
-        C
-        
-        A - B
-        |   |
-        D   C
-        
-        A - B - E
-        |   |   |
-        D - C - F
-        
-        A - B - E
-        |   |
-        D - C
-        
-        A - B - C - D - E
-        |             /
-        I - H - G - F
         """
         self.assertEqual(GraphUtility.stringifyLoopedGraph(None), "")
         self.assertEqual(GraphUtility.stringifyLoopedGraph({}), "")
+        """
+        A
+        """
         self.assertEqual(GraphUtility.stringifyLoopedGraph({
             "A": []
         }), "A")
+        """
+        A - B
+        """
         self.assertEqual(GraphUtility.stringifyLoopedGraph({
             "A": ["B"],
             "B": ["A"]
         }), "AB")
+        """
+        A - B
+        | /
+        C
+        """
         self.assertEqual(GraphUtility.stringifyLoopedGraph({
             "A": ["B", "C"],
             "B": ["C", "A"],
             "C": ["A", "B"]
         }), "ABC")
+        """
+        A - B
+        |   |
+        D - C
+        """
         self.assertEqual(GraphUtility.stringifyLoopedGraph({
             "A": ["B", "D"],
             "B": ["C", "A"],
             "C": ["D", "B"],
             "D": ["A", "C"]
         }), "ABCD")
+        """
+        A - B
+        |   |
+        D   C
+        """
         self.assertRaises(Exception, GraphUtility.stringifyLoopedGraph, {
             "A": ["B", "D"],
             "B": ["C", "A"],
             "C": ["B"],
             "D": ["A"]
         })
+        """
+        A - B - E
+        |   |   |
+        D - C - F
+        """
         self.assertRaises(Exception, GraphUtility.stringifyLoopedGraph, {
             "A": ["B", "D"],
             "B": ["C", "A", "E"],
@@ -140,6 +143,11 @@ class GraphUtilityTest(unittest.TestCase):
             "E": ["B", "F"],
             "F": ["E", "C"]
         })
+        """
+        A - B - E
+        |   |
+        D - C
+        """
         self.assertRaises(Exception, GraphUtility.stringifyLoopedGraph, {
             "A": ["B", "D"],
             "B": ["C", "A", "E"],
@@ -147,6 +155,11 @@ class GraphUtilityTest(unittest.TestCase):
             "D": ["A", "C"],
             "E": ["B"],
         })
+        """
+        A - B - C - D - E
+        |             /
+        I - H - G - F
+        """
         self.assertEqual(GraphUtility.stringifyLoopedGraph({
             "A": ["B", "I"],
             "B": ["C", "A"],

@@ -1,22 +1,29 @@
 import unittest
+
 from LinkedList import SinglyLinkedList
 from Nodes import SinglyNode
 
+
 class NumberUtility:
-    """Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
-    You may assume that each input would have exactly one solution, and you may not use the same element twice.
-    You can return the answer in any order.
-    https://leetcode.com/problems/two-sum/"""
+    """Contains methods that operate on numbers."""
+
     @staticmethod
     def findTwoElementsFrom(inputNumbers, sumToTarget):
-        """Brute Force:
+        """Problem:
+        Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+        You may assume that each input would have exactly one solution, and you may not use the same element twice.
+        You can return the answer in any order.
+        https://leetcode.com/problems/two-sum/
+
+        Brute Force Solution:
         Simply iterate over the inputNumbers once.
         For every number, iterate over all the inputNumbers to it's right once more.
         Within each iteration, sum the two numbers that each loop points to.
         If the sum of these two numbers amount to sumToTarget, return the index of both these numbers.
         After iterating over all the elements in outermost loop, if you don't find any number pair summing to sumToTarget, raise Error.
         Runtime: O(n^2) Space: O(1)
-        Optimized:
+
+        Optimized Solution:
         Here we trade off space and gain runtime.
         Use a memory where we will store the numbers from inputNumbers that we've already seen while iterating through inputNumbers.
         Visit number at each index once. For each number, check if we have added this number to memory before.
@@ -42,23 +49,27 @@ class NumberUtility:
             # If at the end of all iterations, we didn't find a complementing pair, raise Error
             raise Exception("InvalidInputError")
 
-    """You are given two non-empty linked lists representing two non-negative integers.
-    The digits are stored in reverse order, and each of their nodes contains a single digit.
-    Add the two numbers and return the sum as a linked list. 
-    You may assume the two numbers do not contain any leading zero, except the number 0 itself.
-    https://leetcode.com/problems/add-two-numbers/
-    
-    Note: Let's do a slight modification of this problem that is more commonly known.
-    Here, numbers are represented by linked lists. Not in reverse order but in forward order.
-    Example, 342 will be represented by 3 --> 4 --> 2 and 465 will be represented by 4 --> 6 --> 5."""
     @staticmethod
     def addTwoNumbersRepresentedBy(linkedListOne, linkedListTwo):
-        """Brute Force: 
+        """Problem:
+        You are given two non-empty linked lists representing two non-negative integers.
+        The digits are stored in reverse order, and each of their nodes contains a single digit.
+        Add the two numbers and return the sum as a linked list.
+        You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+        https://leetcode.com/problems/add-two-numbers/
+
+        Note:
+        Let's do a slight modification of this problem that is more commonly known.
+        Here, numbers are represented by linked lists. Not in reverse order but in forward order.
+        Example, 342 will be represented by 3 --> 4 --> 2 and 465 will be represented by 4 --> 6 --> 5.
+
+        Brute Force Solution:
         Convert both the linked list representations of numbers into integers.
         Add them. And convert the result into a linked list representation.
         This may overflow the int capacity since linkedlist could represent very very large numbers very easily.
         Runtime: O(n) Space: O(1)
-        Optimized:
+
+        Optimized Solution:
         Traverse both the linked list representations of numbers separately. Add each element into a stack each.
         Initialize a carry value and until any of the stacks have an element, pop one element from both the stacks at a time.
         When one stack doesn't have an element and the other stacks does, we assume that the empty stack is giving an element with value 0.
@@ -67,7 +78,8 @@ class NumberUtility:
         To append the digits to answer, create linked list nodes with given value, mark that node as head and point its next to previous head.
         Return the final head element.
         Runtime: O(n) Space: O(n)
-        More Optimized:
+
+        More Optimized Solution:
         Reverse both the linked lists representing numbers. Initialize a variable to save carries.
         Traverse both the linked lists together one node at a time. If one of the linked lists ends, assume that it's giving nodes with value 0.
         Add values from both the nodes. Add carry to the result if any.
@@ -112,24 +124,29 @@ class NumberUtility:
         result.reverse()
         return result
 
-
-    """Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
-    https://leetcode.com/problems/median-of-two-sorted-arrays"""
     @staticmethod
     def medianOf(sortedArrayOne, sortedArrayTwo):
-        """Brute Force:
+        """Problem:
+        Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+        https://leetcode.com/problems/median-of-two-sorted-arrays
+
+        Brute Force Solution:
         Merge both the arrays. Find median by finding the middle element of array.
         If the merged array has even elements, find the two middle elements and take their average.
         Runtime: O(m+n) Space: O(m+n)
-        Optimized:
+
+        Optimized Solution:
         Find the total size of merged array without actually merging the arrays (Just a sum of lengths of both the arrays).
         Figure out what element of the array will give us median of final array. Start merging two arrays from the beginning in merge sort method. 
         To do this, evaluate the smallest element on each array, pop the smallest of both and count it merged to the merged array (Again, do not actually merge the array).
         Upon reaching the element of array that will give us median, use those elements to find median and return.
-        More Optimized:
+        Runtime: O(log(m+n)) Space: O(1)
+
+        More Optimized Solution:
         A median is the number that divides the resulting combined array into two equal halves.
         Hence, we can use binary search to split two parts of that array and find the index of such an element 
         that will give us half of the elements from resulting array less than the element and other half more than the element.
+        Runtime: O(log(min(m,n))) Space: O(1)
         
         Note: This is a leetcode hard problem. Not easy to explain in comments like this. A relatively much more detailed and easier to understand explaination is given here.
         https://leetcode.com/problems/median-of-two-sorted-arrays/editorial/"""
@@ -170,14 +187,15 @@ class NumberUtility:
             else:
                 left = pivotOne + 1
 
-
-    """Given a signed 32-bit integer x, return x with its digits reversed.
-    If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
-    Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
-    https://leetcode.com/problems/reverse-integer"""
     @staticmethod
     def reverse(inputInteger):
-        """Brute Force:
+        """Problem:
+        Given a signed 32-bit integer x, return x with its digits reversed.
+        If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+        Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+        https://leetcode.com/problems/reverse-integer
+
+        Brute Force Solution:
         To reverse an integer, identify that we are going to have to take least significant digits from inputInteger and put it on the most significant digit place in output.
         So we simply start with 0 as output. Until inputNumber is 0, repeat below process.
         Take the least significant digit from inputInteger using % 10. Multiply output with 10 and add obtained least significant digit to output.
@@ -202,20 +220,25 @@ class NumberUtility:
         # Finally return output if input was positive, else return a negative version of output.
         return output if not negativeInput else output * -1
 
-    
-    """Given an integer x, return true if x is a palindrome, and false otherwise.
-    Palindrome: An integer is a palindrome when it reads the same forward and backward.
-    For example, 121 is a palindrome while 123 is not.
-    https://leetcode.com/problems/palindrome-number
-    
-    Follow up: Could you solve it without converting the integer to a string?"""
     @staticmethod
     def isPalindrome(inputNumber):
-        """Brute Force:
+        """Problem:
+        Given an integer x, return true if x is a palindrome, and false otherwise.
+
+        Palindrome:
+        An integer is a palindrome when it reads the same forward and backward.
+        For example, 121 is a palindrome while 123 is not.
+        https://leetcode.com/problems/palindrome-number
+
+        Follow up:
+        Could you solve it without converting the integer to a string?
+
+        Brute Force Solution:
         For checking palindrome, general approach is to compare elements from start and end of a string of elements and verify if they're the same.
         So a brute force simple solution would be to convert the inputNumber to string and perform palindrome check on it.
         Runtime: O(n) Space: O(1) --> where n is the characters in the inputNumber
-        Optimized:
+
+        Optimized Solution:
         The question asks for solution without converting the number to string.
         For this, we can identify that a negative number reversed will always have a negative sign at the end of number which isn't a valid integer.
         Hence, we will say that no negative number will ever be palindromic.
@@ -223,7 +246,8 @@ class NumberUtility:
         We can reverse the input number and see if the result is the same as inputNumber.
         Runtime: O(log(n)) Space: O(1) --> where n is the inputNumber itself
         
-        Note: Effectively the runtime complexity is the same for both brute force approach and optimized approach.
+        Note:
+        Effectively the runtime complexity is the same for both brute force approach and optimized approach.
         The only reason for calling optimized approach optimized, is that 
         1. it will eleminate negative numbers right away
         2. will not need to convert integer to string per asked in problem statement."""
@@ -237,35 +261,32 @@ class NumberUtility:
         return inputNumber == NumberUtility.reverse(inputNumber)
 
 
-
-
-
 class NumberUtilityTest(unittest.TestCase):
     def test_findTwoElementsFrom_happyCase(self):
-        self.assertEqual(set(NumberUtility.findTwoElementsFrom([2,7,11,15], 9)), set([0,1]))
-        self.assertEqual(set(NumberUtility.findTwoElementsFrom([3,2,4], 6)), set([1,2]))
-        self.assertEqual(set(NumberUtility.findTwoElementsFrom([3,3], 6)), set([0,1]))
+        self.assertEqual(set(NumberUtility.findTwoElementsFrom([2, 7, 11, 15], 9)), set([0, 1]))
+        self.assertEqual(set(NumberUtility.findTwoElementsFrom([3, 2, 4], 6)), set([1, 2]))
+        self.assertEqual(set(NumberUtility.findTwoElementsFrom([3, 3], 6)), set([0, 1]))
 
     def test_findTwoElementsFrom_emptyInput(self):
         self.assertRaises(Exception, NumberUtility.findTwoElementsFrom, [], 9)
         self.assertRaises(Exception, NumberUtility.findTwoElementsFrom, None, 9)
 
     def test_addTwoNumbersRepresentedBy_happyCase(self):
-        self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([3,4,2]), SinglyLinkedList([4,6,5]))), "8 --> 0 --> 7")
+        self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([3, 4, 2]), SinglyLinkedList([4, 6, 5]))), "8 --> 0 --> 7")
         self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([0]), SinglyLinkedList([0]))), "0")
-        self.assertEqual(str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([9,9,9,9,9,9,9]), SinglyLinkedList([9,9,9,9]))), "1 --> 0 --> 0 --> 0 --> 9 --> 9 --> 9 --> 8")
+        self.assertEqual(str(NumberUtility().addTwoNumbersRepresentedBy(SinglyLinkedList([9, 9, 9, 9, 9, 9, 9]), SinglyLinkedList([9, 9, 9, 9]))), "1 --> 0 --> 0 --> 0 --> 9 --> 9 --> 9 --> 8")
 
     def test_addTwoNumbersRepresentedBy_emptyValues(self):
         self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(None, SinglyLinkedList([]))), "None")
         self.assertEqual(str(NumberUtility.addTwoNumbersRepresentedBy(SinglyLinkedList([]), SinglyLinkedList([]))), "")
 
     def test_medianOf_happyCase(self):
-        self.assertEqual(NumberUtility.medianOf([1,3], [2]), 2)
-        self.assertEqual(NumberUtility.medianOf([1,2], [3,4]), 2.5)
+        self.assertEqual(NumberUtility.medianOf([1, 3], [2]), 2)
+        self.assertEqual(NumberUtility.medianOf([1, 2], [3, 4]), 2.5)
 
     def test_medianOf_emptyInput(self):
-        self.assertEqual(NumberUtility.medianOf([1,3], []), 2)
-        self.assertEqual(NumberUtility.medianOf([], [3,4]), 3.5)
+        self.assertEqual(NumberUtility.medianOf([1, 3], []), 2)
+        self.assertEqual(NumberUtility.medianOf([], [3, 4]), 3.5)
         self.assertEqual(NumberUtility.medianOf([], []), None)
 
     def test_reverse(self):
@@ -282,6 +303,7 @@ class NumberUtilityTest(unittest.TestCase):
     def test_isPalindrome_emptyInput(self):
         self.assertTrue(NumberUtility.isPalindrome(0))
         self.assertFalse(NumberUtility.isPalindrome(None))
+
 
 if __name__ == "__main__":
     unittest.main()

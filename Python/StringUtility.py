@@ -2,17 +2,22 @@ import unittest
 
 
 class StringUtility:
-    """Given a string s, find the length of the longest substring without repeating characters.
-    A substring is a contiguous non-empty sequence of characters within a string.
-    https://leetcode.com/problems/longest-substring-without-repeating-characters/"""
+    """Contains methods that operate on strings."""
+
     @staticmethod
     def longestSubstringWithoutRepeatingCharactersFrom(inputString):
-        """Brute Force:
+        """Problem:
+        Given a string s, find the length of the longest substring without repeating characters.
+        A substring is a contiguous non-empty sequence of characters within a string.
+        https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+        Brute Force Solution:
         Run through the inputString with two loops iterating over with a start and an end pointer finding all the possible substrings.
         Filter out the substrings that have repeating characters.
         Find the longest of the remaining substrings. Return its length.
         Runtime: O(n^3) Space: O(1)
-        Optimized:
+
+        Optimized Solution:
         Use two pointers to form a sliding window that will slide over the inputString and box in the substring with no repeating character.
         Save a counter of the elements that are inside the sliding window in a hashset.
         While adding a character to sliding window, check the character against the hashset.
@@ -51,13 +56,15 @@ class StringUtility:
             right = right + 1
         return slidingWindowMaxLength
 
-    """Given a string s, return the longest palindromic substring in s.
-    Palindromic - A string is palindromic if it reads the same forward and backward.
-    Substring - A substring is a contiguous non-empty sequence of characters within a string.
-    https://leetcode.com/problems/longest-palindromic-substring/"""
     @staticmethod
     def longestPalindromicSubstringIn(inputString):
-        """Brute Force:
+        """Problem:
+        Given a string s, return the longest palindromic substring in s.
+        Palindromic - A string is palindromic if it reads the same forward and backward.
+        Substring - A substring is a contiguous non-empty sequence of characters within a string.
+        https://leetcode.com/problems/longest-palindromic-substring/
+
+        Brute Force Solution:
         Use two pointers to point to a starting and an ending position within the inputString that would denote a substring.
         Go through each value for pointer such that we iterate over all possible substrings of given inputString.
         While iterating over each possible substring, identify if the substring is palindromic.
@@ -66,7 +73,8 @@ class StringUtility:
         If the substring that we are iterating over, is palindromic, check its length. If it's larger than previously seen maximum length palindromic substring, update the saved result.
         At the end after checking all the palindromic substrings, return the final value of the saved max length palindromic substring.
         Runtime: O(n^3) Space: O(1)
-        Optimized:
+
+        Optimized Solution:
         Because in previous approach, we are using start and end indices as our bases, many of the palindromic substring checking work is duplicated.
         For example, if the inputString was `abba`, we will check substring `bb` to be palindromic 4 times within each 3 or more length substring of the inputString.
         Instead, one optimization could be, iterating through each character in inputString, expanding outside from the character as center of palindromic substring.
@@ -98,7 +106,7 @@ class StringUtility:
                 if inputString[leftLookupIndex] != inputString[rightLookupIndex]:
                     break
                 # If characters at left lookup and right lookup are the same, update palindromic substring seen so far with current character at the center.
-                currentPalindromicSubstring = inputString[leftLookupIndex:rightLookupIndex+1]
+                currentPalindromicSubstring = inputString[leftLookupIndex:rightLookupIndex + 1]
                 # Increase the lookup window length for next iteration.
                 lookaroundWindowLength += 1
             # We are breaking before updating current palindromic substring when encountering different characters at both lookup indices.
@@ -112,7 +120,7 @@ class StringUtility:
             # Only if the characters at idx and idx - 1 are the same, we can have palindromic substring with these two characters as their center.
             if inputString[idx] == inputString[idx - 1]:
                 # Instead of initializing current palindromic substring as character at idx (current character), we will initialize it as the pair of characters that we know are equal (idx, idx - 1)
-                currentPalindromicSubstring = inputString[idx-1:idx+1]
+                currentPalindromicSubstring = inputString[idx - 1:idx + 1]
                 # Same lookaround window, the same idea as previous occurrance.
                 lookaroundWindowLength = 1
                 # This time we will subtract 1 from left lookup index because we are already working with a center pair that's idx and idx - 1 characters.
@@ -123,7 +131,7 @@ class StringUtility:
                     if inputString[leftLookupIndex] != inputString[rightLookupIndex]:
                         break
                     # Same execution as before.
-                    currentPalindromicSubstring = inputString[leftLookupIndex:rightLookupIndex+1]
+                    currentPalindromicSubstring = inputString[leftLookupIndex:rightLookupIndex + 1]
                     # Same idea as before.
                     lookaroundWindowLength += 1
                 # Same idea as before.
@@ -134,16 +142,18 @@ class StringUtility:
         # We can simply return the longest palindromic substring so far because we've checked all possible palindromic substrings for given inputString.
         return longestPalindromicSubstringSoFar
 
-    """The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
-    P   A   H   N
-    A P L S I I G
-    Y   I   R
-    And then read line by line: "PAHNAPLSIIGYIR"
-    Write the code that will take a string and make this conversion given a number of rows.
-    https://leetcode.com/problems/zigzag-conversion"""
     @staticmethod
     def zigzagEncodingOf(inputString, inRowCount):
-        """Brute Force:
+        """Problem:
+        The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+        P   A   H   N
+        A P L S I I G
+        Y   I   R
+        And then read line by line: "PAHNAPLSIIGYIR"
+        Write the code that will take a string and make this conversion given a number of rows.
+        https://leetcode.com/problems/zigzag-conversion
+
+        Brute Force Solution:
         Zigzag pattern given in the problem description, gives us a very good way of approaching a solution.
         We start with iterating over each character from the string.
         For each character, we move to another row in output and append the character to that row.
@@ -151,7 +161,8 @@ class StringUtility:
         Vice versa for the first row where we'd invert back the pattern increasing pattern.
         After creating output rows, join them into a string and return.
         Runtime: O(n) Space: O(n)
-        Optimized:
+
+        Optimized Solution:
         To approach this problem, we can realize that this is a very niche mathematical problem where for every index in output, we need to figure out the formula to what character from input will go there.
         We can find out the number of characters that will go in one repetition of the pattern.
         Here, a pattern is one combination of zig and zag that includes one vertical column and one diagonal column.
@@ -200,22 +211,24 @@ class StringUtility:
                 inputPointer += charactersInOnePattern
         return answer
 
-
-    """Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer (similar to C/C++'s atoi function).
-    The algorithm for myAtoi(string s) is as follows:
-    Read in and ignore any leading whitespace.
-    Check if the next character (if not already at the end of the string) is '-' or '+'. Read this character in if it is either. This determines if the final result is negative or positive respectively. Assume the result is positive if neither is present.
-    Read in next the characters until the next non-digit character or the end of the input is reached. The rest of the string is ignored.
-    Convert these digits into an integer (i.e. "123" -> 123, "0032" -> 32). If no digits were read, then the integer is 0. Change the sign as necessary (from step 2).
-    If the integer is out of the 32-bit signed integer range [-231, 231 - 1], then clamp the integer so that it remains in the range. Specifically, integers less than -231 should be clamped to -231, and integers greater than 231 - 1 should be clamped to 231 - 1.
-    Return the integer as the final result.
-    Note:
-    Only the space character ' ' is considered a whitespace character.
-    Do not ignore any characters other than the leading whitespace or the rest of the string after the digits.
-    https://leetcode.com/problems/string-to-integer-atoi"""
     @staticmethod
     def stringToInteger(inputString):
-        """Brute Force:
+        """Problem:
+        Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer (similar to C/C++'s atoi function).
+        The algorithm for myAtoi(string s) is as follows:
+        Read in and ignore any leading whitespace.
+        Check if the next character (if not already at the end of the string) is '-' or '+'. Read this character in if it is either. This determines if the final result is negative or positive respectively. Assume the result is positive if neither is present.
+        Read in next the characters until the next non-digit character or the end of the input is reached. The rest of the string is ignored.
+        Convert these digits into an integer (i.e. "123" -> 123, "0032" -> 32). If no digits were read, then the integer is 0. Change the sign as necessary (from step 2).
+        If the integer is out of the 32-bit signed integer range [-231, 231 - 1], then clamp the integer so that it remains in the range. Specifically, integers less than -231 should be clamped to -231, and integers greater than 231 - 1 should be clamped to 231 - 1.
+        Return the integer as the final result.
+
+        Note:
+        Only the space character ' ' is considered a whitespace character.
+        Do not ignore any characters other than the leading whitespace or the rest of the string after the digits.
+        https://leetcode.com/problems/string-to-integer-atoi
+
+        Brute Force Solution:
         As instructed, we will start with first character iterating through each character of the input string.
         We will have a logic for handling each type of character encountered.
         For white space, we will keep a flag that indicates if we've encountered any digit yet or not.
@@ -230,7 +243,7 @@ class StringUtility:
         # weather we've encountered a + / - sign or not
         # weather the sign encountered was negative or not.
         digitEncountered = False
-        signEncountered =  False
+        signEncountered = False
         isNegative = False
         # Initialize output as 0
         output = 0
@@ -259,15 +272,16 @@ class StringUtility:
         # At last, if we had encountered a sign, depending on the sign flag, update the result before returning
         return output * (-1 if isNegative else 1)
 
-
-    """Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
-    '.' Matches any single character.​​​​
-    '*' Matches zero or more of the preceding element.
-    The matching should cover the entire input string (not partial).
-    https://leetcode.com/problems/regular-expression-matching"""
     @staticmethod
     def regexMatching(inputString, pattern):
-        """Brute Force:
+        """Problem:
+        Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
+        '.' Matches any single character.
+        '*' Matches zero or more of the preceding element.
+        The matching should cover the entire input string (not partial).
+        https://leetcode.com/problems/regular-expression-matching
+
+        Brute Force Solution:
         Since one character from the pattern can match multiple characters from inputString, we will start by enumerating each character from pattern.
         We will also have a pointer that will point to the current character to be matched on inputString.
         For each character that's not a special character, we will match the character from pattern to the inputString as it is.
@@ -306,19 +320,22 @@ class StringUtility:
         # At the end, we want to ensure that the pattern matched the whole of the string. So if we reach the end of inputString at the end, return True otherwise return False.
         return inputStringPointer == len(inputString)
 
-    
-    """Write a function to find the longest common prefix string amongst an array of strings.
-    If there is no common prefix, return an empty string "".
-    https://leetcode.com/problems/longest-common-prefix"""
     @staticmethod
     def longestCommonPrefix(stringArray):
-        """To find longest common prefix to all the strings in array, we will have to go through each string from array 
+        """Problem:
+        Write a function to find the longest common prefix string amongst an array of strings.
+        If there is no common prefix, return an empty string "".
+        https://leetcode.com/problems/longest-common-prefix
+
+        Brute Force Solution:
+        To find longest common prefix to all the strings in array, we will have to go through each string from array
         comparing characters one by one and determining longest common prefix based on if the characters match for all string or not.
         Here, one way to put in a small optimization would be to realize that the longest common prefix possible is the shortest string in the array.
         Hence, we will find out the smallest string at the beginning. Go through each character on that string and ensure that this character appears on the same position for all other strings in array too.
         If they do, we identify this character a part of common prefix for the array of strings and we move on to next character in the smallest string. 
         If they don't, means the common prefix ended at this character. Hence, what prefix we've found so far, will be the longest common prefix.
-        Hence, we return this prefix. If we reach end of the shortest string while comparing, whole shortest string is the common prefix for the array. Hence we return the whole things."""
+        Hence, we return this prefix. If we reach end of the shortest string while comparing, whole shortest string is the common prefix for the array. Hence we return the whole things.
+        Runtime: O(m*n) Space: O(1) --> where m is length of smallest string in array and n is total number of strings in array"""
         # Initialize the longest common prefix empty.
         longestCommonPrefix = ""
         # If the stringArray is empty, longest common prefix will stay empty.
@@ -340,8 +357,6 @@ class StringUtility:
                 break
         # Whatever we've found so far, is the longest the common prefix can be. So return that.
         return longestCommonPrefix
-
-
 
 
 class StringUtilityTest(unittest.TestCase):
@@ -395,9 +410,9 @@ class StringUtilityTest(unittest.TestCase):
         self.assertTrue(StringUtility.regexMatching("This is a full sentense. Will contain many many letters, white-spaces and punctuations!", ".*"))
 
     def test_longestCommonPrefix(self):
-        self.assertEqual(StringUtility.longestCommonPrefix(["flower","flow","flight"]), "fl")
-        self.assertEqual(StringUtility.longestCommonPrefix(["flower","flow","flowering"]), "flow")
-        self.assertEqual(StringUtility.longestCommonPrefix(["dog","racecar","car"]), "")
+        self.assertEqual(StringUtility.longestCommonPrefix(["flower", "flow", "flight"]), "fl")
+        self.assertEqual(StringUtility.longestCommonPrefix(["flower", "flow", "flowering"]), "flow")
+        self.assertEqual(StringUtility.longestCommonPrefix(["dog", "racecar", "car"]), "")
         self.assertEqual(StringUtility.longestCommonPrefix([]), "")
         self.assertEqual(StringUtility.longestCommonPrefix(None), "")
 

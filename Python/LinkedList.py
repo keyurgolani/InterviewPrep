@@ -1,12 +1,14 @@
 import unittest
-from Nodes import SinglyNode
 from collections.abc import Iterable
+
+from Nodes import SinglyNode
 from TestUtility import TestUtility
 
-"""Singly Linked List is a linked list that uses singly nodes to store a list.
-This means that each node of the linked list will have only its own value and pointer to the next node in the list.
-The linked list itself contains only the pointer to the head node of the linked list where the list starts."""
+
 class SinglyLinkedList():
+    """Singly Linked List is a linked list that uses singly nodes to store a list.
+    This means that each node of the linked list will have only its own value and pointer to the next node in the list.
+    The linked list itself contains only the pointer to the head node of the linked list where the list starts."""
 
     def __init__(self, head=None):
         self.head = None
@@ -37,9 +39,9 @@ class SinglyLinkedList():
             # If head is anything else, create a SinglyNode out of it and use that as a head.
             self.head = SinglyNode(head)
 
-    """Get a stringified version of the linked list"""
     def __str__(self):
-        """Represent linked list with all nodes stringified."""
+        """Get a stringified version of the linked list"""
+        # Represent linked list with all nodes stringified.
         result = ""
         if self.head:
             currentNode = self.head
@@ -48,16 +50,15 @@ class SinglyLinkedList():
                 currentNode = currentNode.next
         return result
 
-    """Iterate over each element from the linked list"""
     def __iter__(self):
+        """Iterate over each element from the linked list"""
         currentNode = self.head
         while currentNode:
             yield currentNode
             currentNode = currentNode.next
 
-    """Append an element at the back of the linked list"""
     def append(self, next):
-        targetNode = None
+        """Append an element at the back of the linked list"""
         # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
         if type(next) == SinglyNode:
             targetNode = next
@@ -75,10 +76,8 @@ class SinglyLinkedList():
                 currentNode = currentNode.next
             currentNode.next = targetNode
 
-    """Prepend an element at the front of the linked list"""
     def prepend(self, first):
-        targetNode = None
-        newHead = None
+        """Prepend an element at the front of the linked list"""
         # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
         if type(first) == SinglyNode:
             targetNode = newHead = first
@@ -92,8 +91,8 @@ class SinglyLinkedList():
         targetNode.next = self.head
         self.head = newHead
 
-    """Reverse the order of linked list elements"""
     def reverse(self):
+        """Reverse the order of linked list elements"""
         # If self.head is not present, the linked list is initialized without any value. Hence nothing to be done to reverse it.
         if self.head:
             current = self.head
@@ -107,8 +106,8 @@ class SinglyLinkedList():
             # At the end of linked list pointer reversals, the current node will be None. Hence, previous is the node used to be the last node. Make that the new head.
             self.head = previous
 
-    """Remove nth node from list"""
     def removeNth(self, integerPosition):
+        """Remove nth node from list."""
         if integerPosition is None:
             raise Exception("Invalid Input")
         if self.head is None:
@@ -116,7 +115,7 @@ class SinglyLinkedList():
         if integerPosition == 0:
             self.head = self.head.next
         else:
-            # Use dummy node to always be on metaforically `previous` node to what we want to remove
+            # Use dummy node to always be on metaphorically `previous` node to what we want to remove
             # This will work because we've already taken care of removing first node if asked.
             currentNode = SinglyNode(None, self.head)
             while currentNode.next and integerPosition:
@@ -125,8 +124,6 @@ class SinglyLinkedList():
             deleteNode = currentNode.next
             currentNode.next = currentNode.next.next
             del deleteNode
-        
-        
 
 
 class SinglyLinkedListTest(unittest.TestCase):
@@ -138,25 +135,25 @@ class SinglyLinkedListTest(unittest.TestCase):
         self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(7)))
 
     def test_createList_fromIterable(self):
-        linkedList = SinglyLinkedList([0,1,2,3,4,5])
+        linkedList = SinglyLinkedList([0, 1, 2, 3, 4, 5])
         self.assertEqual(str(linkedList), " --> ".join(TestUtility.stringRange(6)))
         linkedList2 = SinglyLinkedList([SinglyNode(idx) for idx in range(6)])
         self.assertEqual(str(linkedList), str(linkedList2))
 
     def test_iterate(self):
-        linkedList = SinglyLinkedList([0,1,2,3,4,5])
+        linkedList = SinglyLinkedList([0, 1, 2, 3, 4, 5])
         for idx, node in enumerate(linkedList):
             self.assertEqual(type(node), SinglyNode)
             self.assertEqual(node.value, idx)
 
     def test_reverse(self):
-        linkedList = SinglyLinkedList([0,1,2,3,4,5])
+        linkedList = SinglyLinkedList([0, 1, 2, 3, 4, 5])
         linkedList.reverse()
-        linkedList2 = SinglyLinkedList([5,4,3,2,1,0])
+        linkedList2 = SinglyLinkedList([5, 4, 3, 2, 1, 0])
         self.assertEqual(str(linkedList), str(linkedList2))
 
     def test_append(self):
-        linkedList = SinglyLinkedList([0,1,2,3,4,5])
+        linkedList = SinglyLinkedList([0, 1, 2, 3, 4, 5])
         linkedList.append(SinglyNode(6))
         linkedList.append(7)
         linkedList.append(SinglyLinkedList(SinglyNode(8, SinglyNode(9, SinglyNode(10)))))
@@ -180,8 +177,5 @@ class SinglyLinkedListTest(unittest.TestCase):
         self.assertEqual(str(linkedList2), " --> ".join(TestUtility.stringRange(1, 5)))
 
 
-
 if __name__ == "__main__":
     unittest.main()
-
-    
