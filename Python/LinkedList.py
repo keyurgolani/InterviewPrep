@@ -12,9 +12,9 @@ class SinglyLinkedList():
 
     def __init__(self, head=None):
         self.head = None
-        # Using type of head value passed in to see how linked list should be initialized.
+        # Using the type of head value passed in to see how the linked list should be initialized.
         if isinstance(head, Iterable):
-            # If head is a list of values add them all one by one and create a linked list.
+            # If head is a list of values, add them all one by one and create a linked list.
             previousElement = None
             # Go over each element from the input value and append them all one by one to the current linked list
             for element in head:
@@ -24,24 +24,24 @@ class SinglyLinkedList():
                     currentElement = element
                 else:
                     currentElement = SinglyNode(element)
-                # When going through first element from the input list, the head will be empty so use current element as head. After that, append current element at the end of the list.
+                # When going through the first element from the input list, the head will be empty, so use the current element as head. After that, append the current element at the end of the list.
                 if self.head is None:
                     self.head = currentElement
                 else:
                     previousElement.next = currentElement
-                # Move the pointer for end of the list to currently added last element
+                # Move the pointer for the end of the list to currently added last element
                 previousElement = currentElement
         elif type(head) == SinglyNode or head is None:
-            # If head is an already made SinglyNode object, use that as a head.
-            # If head is None, we want self.head to be None that will indicate us that the linked list was initiated without a value
+            # If the head is an already made SinglyNode object, use that as a head.
+            # If the head is None, we want self.head to be None that will indicate us that the linked list was initiated without a value
             self.head = head
         else:
-            # If head is anything else, create a SinglyNode out of it and use that as a head.
+            # If the head is anything else, create a SinglyNode out of it and use that as a head.
             self.head = SinglyNode(head)
 
     def __str__(self):
         """Get a stringified version of the linked list"""
-        # Represent linked list with all nodes stringified.
+        # Represent the linked list with all nodes stringified.
         result = ""
         if self.head:
             currentNode = self.head
@@ -59,7 +59,7 @@ class SinglyLinkedList():
 
     def append(self, next):
         """Append an element at the back of the linked list"""
-        # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
+        # Based on the type of incoming value, the target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
         if type(next) == SinglyNode:
             targetNode = next
         elif type(next) == SinglyLinkedList:
@@ -67,7 +67,7 @@ class SinglyLinkedList():
         else:
             targetNode = SinglyNode(next)
         if self.head is None:
-            # If self.head is None that means the linked list was initialized without an element. Make the target node the head.
+            # If self.head is None, that means the linked list was initialized without an element. Make the target node the head.
             self.head = targetNode
         else:
             # If not, traverse the linked list to the last element and append target node next to it.
@@ -78,7 +78,7 @@ class SinglyLinkedList():
 
     def prepend(self, first):
         """Prepend an element at the front of the linked list"""
-        # Based on the type of incoming value, target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
+        # Based on the type of incoming value, the target node will be either the incoming SinglyNode object or a LinkedList or a SinglyNode object created from incoming value.
         if type(first) == SinglyNode:
             targetNode = newHead = first
         elif type(first) == SinglyLinkedList:
@@ -93,21 +93,21 @@ class SinglyLinkedList():
 
     def reverse(self):
         """Reverse the order of linked list elements"""
-        # If self.head is not present, the linked list is initialized without any value. Hence nothing to be done to reverse it.
+        # If self.head is not present, the linked list is initialized without any value. Hence, nothing to be done to reverse it.
         if self.head:
             current = self.head
             previous = None
-            # Go through each element reversing the pointers of nodes till end.
+            # Go through each element reversing the pointers of nodes till the end.
             while current:
-                next = current.next
+                nextElement = current.next
                 current.next = previous
                 previous = current
-                current = next
-            # At the end of linked list pointer reversals, the current node will be None. Hence, previous is the node used to be the last node. Make that the new head.
+                current = nextElement
+            # At the end of linked list pointer reversals, the current node will be None. Hence, the previous is the node used to be the last node. Make that the head.
             self.head = previous
 
     def removeNth(self, integerPosition):
-        """Remove nth node from list."""
+        """Remove nth node from the list."""
         if integerPosition is None:
             raise Exception("Invalid Input")
         if self.head is None:
@@ -115,15 +115,14 @@ class SinglyLinkedList():
         if integerPosition == 0:
             self.head = self.head.next
         else:
-            # Use dummy node to always be on metaphorically `previous` node to what we want to remove
-            # This will work because we've already taken care of removing first node if asked.
+            # Use fake node to always be on metaphorically `previous` node to what we want to remove
+            # This will work because we've already taken care of removing the first node if asked.
             currentNode = SinglyNode(None, self.head)
             while currentNode.next and integerPosition:
                 currentNode = currentNode.next
                 integerPosition -= 1
-            deleteNode = currentNode.next
             currentNode.next = currentNode.next.next
-            del deleteNode
+            # Python will take care of deleting node that's not referenced anywhere.
 
 
 class SinglyLinkedListTest(unittest.TestCase):

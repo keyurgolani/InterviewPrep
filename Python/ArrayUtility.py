@@ -29,39 +29,39 @@ class ArrayUtility:
 
         Brute Force Solution:
         Very basic way of achieving this result would be to iterate through the array of prices finding all possible sub-arrays.
-        Go through each subarray identifying if the first or last element of given subarray is the max value i.e determining if the subarray is max profitable.
+        Go through each subarray identifying if the first or last element of given subarray is the max value i.e., determining if the subarray is max-profitable.
         If the subarray is max profitable, increment a global counter and move on.
-        At the end, return the global counter.
-        Runtime: O(n^3) Space: O(1) --> This is because we will find n^2 subarrays and to find their max we will have to iterate each of them once more.
+        In the end, return the global counter.
+        Runtime: O(n^3) Space: O(1) --> This is because we will find n^2 sub-arrays and to find their max, we will have to iterate each of them once more.
 
         Optimized Solution:
-        One way to approach this, would be to realize that we can directly target counting the max profitable subarrays instead of going through all of them and identifying max profitable.
-        To do this, we will identify that, any subarray that starts or ends at the max value in given array, will be max profitable.
-        Also, any other array that contains the max value in given array, will not be max profitable because the start or end value can never be max.
-        Hence, out of all the arrays that include max element in an array, we can count number of subarrays starting or ending in max element and ignore all other subarrays.
-        After this, we can start breaking down this problem in pieces and hone in on the arrays that are created by searating main array into two from max element. Repeat the above process on both new parts of arrays and keep repeating.
+        One way to approach this would be to realize that we can directly target counting the max-profitable sub-arrays instead of going through all of them and identifying max profitable.
+        To do this, we will identify that any subarray that starts or ends at the max value in the given array will be max-profitable.
+        Also, any other array that contains the max value in given array will not be max profitable because the start or end value can never be max.
+        Hence, out of all the arrays that include max element in an array, we can count the number of sub-arrays starting or ending in max element and ignore all other sub-arrays.
+        After this, we can start breaking down this problem in pieces and hone in on the arrays that are created by separating the main array into two from the max element. Repeat the above process on both new parts of arrays and keep repeating.
         Finally, the base condition for recursion will be when the array has just one element where it will always be max profitable.
-        On each iteration, we send back the max profitable window counts for the subarray we're operating on. At the end, we get desired result for the whole array.
+        On each iteration, we send back the max-profitable window counts for the subarray we're operating on. In the end, we get the desired result for the whole array.
         Runtime: O(log2(n)) Space: O(1) --> Here, recursive calls will occupy O(log2(n)) heap space but no additional space used by code"""
 
-        # Recursive version of the method that will take the left and right bounds of original array and treat that window as the original array for given recursion.
+        # Recursive version of the method that will take the left and right bounds of the original array and treat that window as the original array for given recursion.
         # Within this method, we will refer the subarray from left to right (right including) as the original array going forward.
         def findMaxProfitableWindowCount(left, right):
-            # We will always have max profitable windows as the amount of elements in original array.
-            # This is because all elements will have a window that either starts at given element and ends at max element in that array or starts at max element in that array and ends at given element.
+            # We will always have max-profitable windows as the number of elements in the original array.
+            # This is because all elements will have a window that either starts at given element and ends at the max element in that array or starts at the max element in that array and ends at the given element.
             answer = (right - left + 1)
             # If left and right point to the same element, we will only return answer (only one element so answer will be 1) for this recursion.
-            # However, if left and right form a window that contains more than one elements, we count more max profitable windows contained within subwindows.
+            # However, if left and right form a window that contains more than one element, we count more max-profitable windows contained within sub-windows.
             if right - left != 0:
-                # We need to find the index of max element in given array to identify where to split the array from. Initialize it to None and max element to 0.
+                # We need to find the index of max element in given the array to identify where to split the array from. Initialize it to None and max element to 0.
                 maxElementIndex = None
                 maxElement = 0
-                # Iterate over all the elements in original array and figure out the max element and what its index is.
+                # Iterate over all the elements in the original array and figure out the max element and what its index is.
                 for idx in range(left, right + 1):
                     if maxElement < stockPrices[idx]:
                         maxElement = stockPrices[idx]
                         maxElementIndex = idx
-                # If we found a max element and the index was updated from original None, we split the original array into subarrays excluding max element. And add the answer from recursion to current answer.
+                # If we found a max element and the index was updated from original None, we split the original array into sub-arrays excluding the max element. And add the answer from recursion to current answer.
                 if maxElementIndex is not None:
                     answer += findMaxProfitableWindowCount(left, maxElementIndex - 1) + findMaxProfitableWindowCount(maxElementIndex + 1, right)
             # Once we have added all elements of answer, return answer
@@ -80,31 +80,31 @@ class ArrayUtility:
         https://leetcode.com/problems/container-with-most-water
 
         Brute Force Solution:
-        To find the water contained between any two building, we would need to find the distance between them and multiply with the height of shortest building.
-        Any more water will spillover from the smaller building.
-        Simplest way to find the maximum water contained between any two buildings would be to pick each combination of two buildings one by one and iterate through them.
+        To find the water contained between any two buildings, we would need to find the distance between them and multiply with the height of the shortest building.
+        Any more water will spill over from the smaller building.
+        The simplest way to find the maximum water contained between any two buildings would be to pick each combination of two buildings one by one and iterate through them.
         For each combination of two buildings, find the water contained by those two. Compare against a global max and if larger, update the global max.
         At the end of all iterations, return the maximum water that can be contained.
         Runtime: O(n^2) Space: O(1)
 
         Optimized Solution:
         To optimize the approach to this, we need to realize that water bound between a pair of buildings is limited by the height of the building that's shorter.
-        However, the two maximum height buildings can be very near to eachother and contain much lesser water than what other smaller height buildings that are far apart could.
+        However, the two maximum height buildings can be very near to each other and contain much lesser water than what other smaller height buildings that are far apart could.
         Hence, to optimize this, we start with the max distanced buildings. Identify the shorter building and move inward from that direction.
         For each pair of buildings, find the water contained between these buildings and update a global max.
-        After performing this until both the pointers meet eachother, the global max we've found should be the max water contained with any pair of buildings.
+        After performing this until both the pointers meet each other, the global max we've found should be the max water contained with any pair of buildings.
         Runtime: O(n) Space: O(1)"""
         if not buildingHeights:
             return 0
         # Initialize left pointer, right pointer and global max water contained variable
         maxWaterContained, leftPointer, rightPointer = 0, 0, len(buildingHeights) - 1
-        # Iterate until left pointer and right pointer meet eachother.
+        # Iterate until the left pointer and right pointer meet each-other.
         while leftPointer < rightPointer:
             # Find water contained between two buildings marked by left pointer and right pointer
             waterContained = (rightPointer - leftPointer) * min(buildingHeights[leftPointer], buildingHeights[rightPointer])
             # If water contained between these two buildings is more than the max found so far, update the max
             maxWaterContained = max(waterContained, maxWaterContained)
-            # Find the smaller heighted building from the pair of buildings in question and move that pointer inwards.
+            # Find the smaller height building from the pair of buildings in question and move that pointer inwards.
             if buildingHeights[leftPointer] < buildingHeights[rightPointer]:
                 leftPointer += 1
             else:
